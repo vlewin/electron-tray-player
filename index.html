@@ -1,0 +1,168 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+
+    <title>MP3/Radio player</title>
+    <!-- https://cdnjs.com/libraries/framework7 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.4.2/css/framework7.material.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.4.2/css/framework7.material.colors.min.css">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style type="text/css">
+      body {
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #player {
+        visibility: hidden;
+        display: none;
+      }
+
+      .card {
+        margin: 0;
+      }
+
+      .card .card-header {
+        height: 60vw;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .card .card-header b {
+        color: #000;
+        text-shadow: 0 1px 0 #ccc,
+                     0 2px 0 #c9c9c9,
+                     0 3px 0 #bbb,
+                     0 4px 0 #b9b9b9,
+                     0 5px 0 #aaa,
+                     0 6px 1px rgba(0,0,0,.1),
+                     0 0 5px rgba(0,0,0,.1),
+                     0 1px 3px rgba(0,0,0,.3),
+                     0 3px 5px rgba(0,0,0,.2),
+                     0 5px 10px rgba(0,0,0,.25),
+                     0 10px 10px rgba(0,0,0,.2),
+                     0 20px 20px rgba(0,0,0,.15);
+
+      }
+
+      a > i {
+        color: #9e9e9e;
+      }
+
+      i:hover {
+        color: #2196f3!important;
+        border-color: #2196f3!important;
+      }
+
+      i.round {
+        border: 2px solid #9e9e9e;
+        border-radius: 100%;
+      }
+
+      i.icon-medium {
+        font-size: 40px;
+        color: #9e9e9e;
+        height: 40px;
+        width: 40px;
+        margin: 10px;
+      }
+
+      i.icon-large {
+        color: #9e9e9e;
+        font-size: 60px;
+        height: 60px;
+        width: 60px;
+        vertical-align: bottom;
+        margin: 0;
+      }
+
+      .controls i {
+        margin: 10px;
+      }
+
+      .controls i.icon-large {
+        margin: 0;
+      }
+
+      .right {
+        position: absolute;
+        right: 0;
+        top: 10px;
+        vertical-align: middle;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div id="app">
+      <div class="card demo-card-header-pic">
+        <div style="background-image:url(https://highfive.isqi.org/wp-content/uploads/2016/03/Music.jpg)" valign="bottom" class="card-header color-white no-border">
+          <b>Journey To Mountains</b>
+        </div>
+        <!-- <div style="background-image:url('https://highfive.isqi.org/wp-content/uploads/2016/03/Music.jpg')" valign="bottom" class="card-header color-white no-border">Journey To Mountains</div> -->
+        <div class="card-content">
+          <div class="card-content-inner">
+            <p class="color-gray">Posted on January 21, 2015 {{ playing }}</p>
+            <span class="progressbar" data-progress="{{progress}}">
+              <span></span>
+            </span>
+            <!-- <p>Quisque eget vestibulum nulla...</p> -->
+          </div>
+        </div>
+        <div class="card-footer">
+          <controls :playing="playing"></controls>
+
+          <p>
+            <a href="#" data-popup=".popup-about" class="open-popup">
+              <i class="material-icons icon-large">playlist_play</i>
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <player :source="current"></player>
+
+      <div class="popup popup-about">
+        <div class="">
+          <div class="content-block-title">
+            Playlist
+            <a href="#" class="close-popup">
+              <i class="material-icons right">close</i>
+            </a>
+          </div>
+
+          <div class="list-block">
+            <ul>
+              <li class="item-content" v-for="source in playlist">
+                <div class="item-media">
+                  <!-- <i class="icon icon-f7"></i> -->
+                  <i class="material-icons">favorite_border</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title">{{ source }}</div>
+                  <div class="item-after">
+                    <a href="#" class="link" v-on:click="current == playlist[$index] ? pause() : play($index)">
+                      <i class="material-icons">{{ current == playlist[$index] ? 'pause' : 'play_arrow' }}</i>
+                    </a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div class="list-block-label">List block label text goes here</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.4.2/js/framework7.min.js"></script>
+    <script type="text/javascript" src="player.js"></script>
+  </body>
+</html>

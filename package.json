@@ -1,0 +1,43 @@
+{
+  "name": "electron-tray-player",
+  "productName": "electron-tray-player",
+  "version": "1.0.0",
+  "description": "Simple MP3/Radio player - system tray application (Electron + Vue.js)",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard",
+    "start": "electron .",
+    "build": "electron-packager . RuRadio --platform=all --arch=x64 --version=0.36.0 --ignore='node_modules/electron-(packager|prebuild)'",
+    "publish": "publish-release --template notes.md --assets RuRadio.zip"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vlewin/electron-tray-player"
+  },
+  "author": "vlewin",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "latest",
+    "jsdom": "latest",
+    "store": "latest",
+    "menubar": "latest"
+  },
+  "devDependencies": {
+    "electron-connect": "latest",
+    "electron-packager": "latest",
+    "electron-prebuilt": "latest",
+    "electron-rpc": "latest",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-html": "^1.5.1",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.2.2",
+    "gulp": "latest",
+    "publish-release": "latest",
+    "standard": "latest"
+  },
+  "standard": {
+    "ignore": [
+      "electron-tray-player.app/**"
+    ]
+  }
+}
