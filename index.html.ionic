@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+
+    <title>Player</title>
+
+    <link rel="stylesheet" href="http://code.ionicframework.com/1.3.1/css/ionic.min.css">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+
+
+    <style type="text/css">
+      body { background-color: #fff; }
+
+    </style>
+
+    <script>
+      // require('electron-connect').client.create()
+    </script>
+
+  </head>
+  <body>
+    <div id="player">
+      <div class="bar bar-header bar-positive">
+        <h1 class="title">bar-positive</h1>
+      </div>
+
+      <div class="content has-header ">
+        <audio src="{{current}}" controls autoplay loop> </audio>
+
+        <ion-side-menus>
+          <!-- Left menu -->
+          <ion-side-menu side="left">
+          </ion-side-menu>
+
+          <ion-side-menu-content>
+          <!-- Main content, usually <ion-nav-view> -->
+          </ion-side-menu-content>
+
+          <!-- Right menu -->
+          <ion-side-menu side="right">
+          </ion-side-menu>
+
+        </ion-side-menus>
+        
+        <ion-slide-box on-slide-changed="slideHasChanged($index)">
+          <ion-slide>
+            <div class="box blue"><h1>BLUE</h1></div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box yellow"><h1>YELLOW</h1></div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box pink"><h1>PINK</h1></div>
+          </ion-slide>
+        </ion-slide-box>
+        <div class = "row">
+
+        <div class = "col text-center">
+                      <button class = "button button-positive">Icon</button>
+        Title
+                    </div>
+
+
+        <div class = "col text-center">
+                      <button class = "button button-positive">Icon</button>
+        Title
+                    </div>
+
+                  </div>
+
+        <div class="list">
+
+          <div class="item item-avatar">
+            <img src="http://ionic.io/img/ionic-logo-grey.png">
+            <h2>Marty McFly</h2>
+            <p>November 05, 1955</p>
+          </div>
+
+          <div class="item item-body">
+            <img class="full-image" src="http://ionic.io/img/ionic-logo-grey.png">
+            <p>
+              This is a "Facebook" styled Card. The header is created from a Thumbnail List item,
+              the content is from a card-body consisting of an image and paragraph text. The footer
+              consists of tabs, icons aligned left, within the card-footer.
+            </p>
+            <p>
+              <a href="#" class="subdued">
+                <i class="icon ion-android-favorite-outline"></i>
+                Like
+              </a>
+              <a href="#" class="subdued">5 Comments</a>
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+
+      <div class="bar bar-footer">
+        <button class="button icon ion-ios-refresh-outline" v-on:click="reload">Reload</button>
+        <div class="title">Footer</div>
+        <button class="button icon ion-log-out" v-on:click="quite">Quite</button>
+      </div>
+
+
+          <!-- <a class="icon icon-refresh pull-left" v-on:click="reload"></a> -->
+          <!-- <a class="icon icon-close pull-right" v-on:click="quite"></a> -->
+      </div>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script type="text/javascript" src="http://code.ionicframework.com/1.3.1/js/ionic.min.js"></script>
+    <script type="text/javascript" src="player.js"></script>
+  </body>
+</html>
