@@ -24,8 +24,9 @@ process.on('uncaughtException', function (err) {
 
 menu.on('ready', function ready() {
   app.on('load', function load(ev, args) {
-    console.log()
+    console.log('Load songs and return playlist')
     console.log('ARGS: ', args)
+    getRadioStations(0)
   })
 
   app.on('reload', function terminate(ev) {
@@ -44,9 +45,39 @@ menu.on('ready', function ready() {
 })
 
 menu.once('show', function () {
-  menu.window.openDevTools({ detach: false })
+  // menu.window.openDevTools({ detach: false })
 })
 
 menu.on('show', function show() {
   app.configure(menu.window.webContents)
 })
+
+function getRadioStations(page) {
+  console.log('Next page: ', page)
+  var page = page || 1
+  var url = 'http://muz-puls.ru/category/katalog-radio/page/' + page
+
+  jsdom.env({
+    url: url,
+    scripts: ['http://code.jquery.com/jquery.js'],
+    done: function (err, window) {
+      var list = []
+      var $ = window.$
+
+      $('div.item').each(function () {
+        var $item = $(this)
+        var $image = $item.find('img.attachment-thumbnail')
+        var $link = $item.find('span.play')
+
+        list.push({
+          title: $link.data('title'),
+          stream: $link.data('stream'),
+          image: $image.attr('src')
+        })
+      })
+
+      console.log(list)
+      app.send('show', { stations: list, page: page })
+    }
+  })
+}

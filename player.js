@@ -4,12 +4,19 @@ var client = new Client()
 
 var Player = Vue.extend({
   props: ['source'],
-  template: '<audio id="player" v-bind:src="source" controls autoplay loop> </audio>'
+  template: '<audio id="player" v-bind:src="source.stream" controls autoplay></audio>'
 })
 
+// FIXME: Add loading animation: http://www.alessioatzeni.com/blog/css3-loading-animation-loop/
 var Controls = Vue.extend({
   props: ['playing'],
   computed: {
+    stream: function () {
+      var stream = this.source ? this.source.stream : ''
+      console.log('Stream is: ', stream)
+      return stream
+    },
+
     label: function () {
       return this.playing ? 'Pause' : 'Play'
     }
@@ -31,21 +38,22 @@ new Vue({
 
   data: {
     playing: false,
-    current: 0,
+    current: { title: '', stream: '' },
+    index: 0,
     progress: 0,
+    position: 0,
+    duration: 0,
+    defaultCover: 'https://highfive.isqi.org/wp-content/uploads/2016/03/Music.jpg',
     message: 'Simple player!',
     playlist: [
-      'http://tinyurl.com/jfdsl7s',
-      'http://tinyurl.com/jj4tysv'
+      { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
+      { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
     ]
   },
 
   computed: {
-    progress: function () {
-      var player = $('#player')[0]
-      var progress = (player.currentTime * 100) / player.duration
-      console.log(progress)
-      return progress
+    cover: function () {
+      return this.current.image ? this.current.image : this.defaultCover
     }
   },
 
@@ -53,12 +61,34 @@ new Vue({
     this.autoplay()
 
     var _this = this
-    var myApp = new Framework7()
+    // var myApp = new Framework7()
+    var myApp = new Framework7({
+      material: true
+    })
+
     var progressbar = $('.progressbar')
 
+    client.on('show', function (err, response) {
+      console.log('Loaded new playlist')
+      console.log(response.stations)
+
+      myApp.addNotification({
+        message: response.stations.length + ' items added to playlist!'
+      })
+
+      setTimeout(function () {
+        myApp.closeNotification('.notifications')
+      }, 1000)
+
+      _this.playlist = response.stations
+      _this.autoplay()
+    })
+
     $('#player').on('timeupdate', function () {
-      // console.log('Time update', this.currentTime)
-      var progress = (this.currentTime * 100) / this.duration
+      _this.position = Math.floor(this.currentTime)
+      _this.duration = Math.floor(this.duration)
+
+      var progress = (_this.position * 100) / _this.duration
       myApp.setProgressbar(progressbar, progress)
     })
 
@@ -85,12 +115,13 @@ new Vue({
       var _this = this
       console.log('Play', index)
 
+      var $player = $('#player')
       _this.current = _this.playlist[index]
 
-      $('#player').trigger('pause')
+      $player.trigger('pause')
 
       setTimeout(function () {
-        $('#player').trigger('play')
+        $player.trigger('play')
         _this.playing = true
 
       }, 200)
@@ -106,23 +137,30 @@ new Vue({
     pause: function () {
       console.log('Pause')
       $('#player').trigger('pause')
-      this.current = null
+      this.current = { title: '', stream: '' }
       this.playing = false
     },
 
     prev: function () {
-      console.log('Previous')
-      this.current = this.playlist[0]
+      this.index = (this.index - 1) < 0 ? 0 : (this.index - 1)
+      this.current = this.playlist[this.index]
+      console.log('Previous', this.index, this.current.title)
     },
 
     next: function () {
-      console.log('Next')
-      this.current = this.playlist[1]
+      this.index = (this.index + 1) < this.playlist.length ? (this.index + 1) : this.index
+      this.current = this.playlist[this.index]
+
+      console.log('Next', this.index, this.current.title)
     },
 
     reload: function () {
       console.log('Reload')
       location.reload()
+    },
+
+    load: function () {
+      this.playlist = client.request('load')
     },
 
     quite: function () {

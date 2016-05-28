@@ -34,21 +34,8 @@
         background-position: center;
       }
 
-      .card .card-header b {
-        color: #000;
-        text-shadow: 0 1px 0 #ccc,
-                     0 2px 0 #c9c9c9,
-                     0 3px 0 #bbb,
-                     0 4px 0 #b9b9b9,
-                     0 5px 0 #aaa,
-                     0 6px 1px rgba(0,0,0,.1),
-                     0 0 5px rgba(0,0,0,.1),
-                     0 1px 3px rgba(0,0,0,.3),
-                     0 3px 5px rgba(0,0,0,.2),
-                     0 5px 10px rgba(0,0,0,.25),
-                     0 10px 10px rgba(0,0,0,.2),
-                     0 20px 20px rgba(0,0,0,.15);
-
+      .card .card-header .chip {
+        /*font-weight: bold;*/
       }
 
       a > i {
@@ -61,7 +48,7 @@
       }
 
       i.round {
-        border: 2px solid #9e9e9e;
+        border: 3px solid #9e9e9e;
         border-radius: 100%;
       }
 
@@ -82,8 +69,16 @@
         margin: 0;
       }
 
-      .controls i {
+      .controls i, .actions i {
         margin: 10px;
+      }
+
+      .controls i:first-child, .actions i:first-child {
+        margin-left: 0px;
+      }
+
+      .controls i:last-child, .actions i:last-child {
+        margin-right: 0px;
       }
 
       .controls i.icon-large {
@@ -96,31 +91,61 @@
         top: 10px;
         vertical-align: middle;
       }
+
+      .notifications .item-title {
+        float: left;
+      }
+
+      .notifications .item-after {
+        float:right;
+      }
     </style>
 
   </head>
   <body>
     <div id="app">
-      <div class="card demo-card-header-pic">
-        <div style="background-image:url(https://highfive.isqi.org/wp-content/uploads/2016/03/Music.jpg)" valign="bottom" class="card-header color-white no-border">
-          <b>Journey To Mountains</b>
+      <div class="notifications list-block media-list">
+        <ul>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div v-bind:style="{ 'background-image': 'url(' + cover + ')'} " valign="bottom" class="card-header color-white no-border">
+          <div class="chip bg-gray color-white">
+            <div class="chip-label">{{ current.title }}</div>
+          </div>
+
+          <div class="chip bg-gray">
+            <div class="chip-label"><i class="material-icons color-white">favorite_border</i></div>
+          </div>
+
         </div>
-        <!-- <div style="background-image:url('https://highfive.isqi.org/wp-content/uploads/2016/03/Music.jpg')" valign="bottom" class="card-header color-white no-border">Journey To Mountains</div> -->
+
         <div class="card-content">
           <div class="card-content-inner">
-            <p class="color-gray">Posted on January 21, 2015 {{ playing }}</p>
-            <span class="progressbar" data-progress="{{progress}}">
-              <span></span>
-            </span>
-            <!-- <p>Quisque eget vestibulum nulla...</p> -->
+            <p>
+              <span class="progressbar" data-progress="{{progress}}">
+                <span></span>
+              </span>
+            </p>
+
+            <p class="color-gray">
+              Time: {{ position }} / {{ duration}}
+            </p>
           </div>
         </div>
+
         <div class="card-footer">
           <controls :playing="playing"></controls>
 
-          <p>
+          <p class="actions">
+            <!-- <i class="icon icon-f7" v-on:click="load"></i> -->
+            <a href="#" v-on:click="load">
+              <i class="material-icons icon-medium">playlist_add</i>
+            </a>
+
             <a href="#" data-popup=".popup-about" class="open-popup">
-              <i class="material-icons icon-large">playlist_play</i>
+              <i class="material-icons icon-medium">playlist_play</i>
             </a>
           </p>
         </div>
@@ -131,7 +156,7 @@
       <div class="popup popup-about">
         <div class="">
           <div class="content-block-title">
-            Playlist
+            Playlist ({{ playlist.length }} items)
             <a href="#" class="close-popup">
               <i class="material-icons right">close</i>
             </a>
@@ -145,7 +170,7 @@
                   <i class="material-icons">favorite_border</i>
                 </div>
                 <div class="item-inner">
-                  <div class="item-title">{{ source }}</div>
+                  <div class="item-title">{{ source.title }}</div>
                   <div class="item-after">
                     <a href="#" class="link" v-on:click="current == playlist[$index] ? pause() : play($index)">
                       <i class="material-icons">{{ current == playlist[$index] ? 'pause' : 'play_arrow' }}</i>
