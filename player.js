@@ -38,12 +38,12 @@ new Vue({
 
   data: {
     playing: false,
-    current: { title: '', stream: '' },
+    current: { title: 'Paused', stream: '' },
     index: 0,
     progress: 0,
     position: 0,
     duration: 0,
-    defaultCover: 'https://highfive.isqi.org/wp-content/uploads/2016/03/Music.jpg',
+    defaultCover: './images/cover.jpg',
     message: 'Simple player!',
     playlist: [
       { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
@@ -137,7 +137,7 @@ new Vue({
     pause: function () {
       console.log('Pause')
       $('#player').trigger('pause')
-      this.current = { title: '', stream: '' }
+      this.current = { title: 'Paused', stream: '' }
       this.playing = false
     },
 
