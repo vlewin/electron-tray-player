@@ -6,14 +6,16 @@
   "main": "index.js",
   "scripts": {
     "test": "standard",
-    "start": "electron .",
-    "build": "electron-packager . RuRadio --platform=all --arch=x64 --version=0.36.0 --ignore='node_modules/electron-(packager|prebuild)'",
-    "publish": "publish-release --template notes.md --assets RuRadio.zip"
+    "start": "gulp serve",
+    "build": "electron-packager . TrayPlayer --platform=darwin --arch=x64 --version=1.2.0 --app-version=1.0.0 --overwrite --asar=false --icon='./images/Icon.icns' --ignore='node_modules/electron-(packager|prebuild)'",
+    "build:all": "electron-packager . TrayPlayer --platform=all --arch=x64 --version=1.2.0 --app-version=1.0.0 --overwrite --asar=false --ignore='node_modules/electron-(packager|prebuild)'"
   },
+
   "repository": {
     "type": "git",
     "url": "https://github.com/vlewin/electron-tray-player"
   },
+
   "author": "vlewin",
   "license": "MIT",
   "dependencies": {
@@ -22,6 +24,7 @@
     "store": "latest",
     "menubar": "latest"
   },
+
   "devDependencies": {
     "electron-connect": "latest",
     "electron-packager": "latest",
@@ -32,12 +35,13 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.2.2",
     "gulp": "latest",
-    "publish-release": "latest",
     "standard": "latest"
   },
+
   "standard": {
     "ignore": [
-      "electron-tray-player.app/**"
+      "TrayPlayer.app/**",
+      "TrayPlayer-darwin-x64.app/**"
     ]
   }
 }

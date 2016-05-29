@@ -10,7 +10,7 @@ var app = new Server()
 
 var opts = {
   dir: __dirname,
-  icon: path.join(__dirname, 'images', 'Play.png'),
+  icon: path.join(__dirname, 'images', 'Icon.png'),
   tooltip: 'MP3/Radio player',
   'preload-window': true,
   'always-on-top': true,
@@ -23,11 +23,11 @@ var opts = {
 
 var menu = menubar(opts)
 
-require('electron-connect').client.create(menu.window)
+// require('electron-connect').client.create(menu.window)
 
 process.on('uncaughtException', function (err) {
   console.error('Exception', err)
-  menu.app.terminate()
+  menu.app.quit()
 })
 
 menu.on('ready', function ready() {
