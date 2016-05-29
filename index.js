@@ -6,7 +6,8 @@ var app = new Server()
 
 var opts = {
   dir: __dirname,
-  icon: path.join(__dirname, 'images', 'Icon.png'),
+  icon: path.join(__dirname, 'images', 'Play.png'),
+  tooltip: 'MP3/Radio player',
   'preload-window': true,
   'always-on-top': true,
   y: 25
