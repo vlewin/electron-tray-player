@@ -2,5 +2,8 @@
 
 ![Alt text](https://github.com/vlewin/electron-tray-player/blob/master/images/Screenshot.png?raw=true "Optional Title")
 
+![Alt text](https://github.com/vlewin/electron-tray-player/blob/master/images/Screenshot2.png?raw=true "Optional Title")
+
 CSS Animations
 https://cssanimation.rocks/
+
