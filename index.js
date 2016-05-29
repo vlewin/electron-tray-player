@@ -10,6 +10,8 @@ var opts = {
   'preload-window': true,
   'always-on-top': true,
   y: 25
+
+  // width: 1024
   // height: 600
 }
 
@@ -37,10 +39,6 @@ menu.on('ready', function ready() {
   app.on('terminate', function terminate(ev) {
     console.log(ev)
     menu.app.quit()
-  })
-
-  app.on('task', function task(req) {
-    console.log('Task event', req)
   })
 })
 
@@ -76,7 +74,7 @@ function getRadioStations(page) {
         })
       })
 
-      console.log(list)
+      // console.log(list)
       app.send('show', { stations: list, page: page })
     }
   })

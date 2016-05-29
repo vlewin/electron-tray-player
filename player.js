@@ -2,6 +2,22 @@ var Vue = require('vue')
 var Client = require('electron-rpc/client')
 var client = new Client()
 
+Vue.filter('time', function (value) {
+  if (isNaN(value)) {
+    return 'N/A'
+  }
+
+  if (!isFinite(value)) {
+    return 'Live stream'
+  }
+
+  d = Number(value)
+  var h = Math.floor(d / 3600)
+  var m = Math.floor(d % 3600 / 60)
+  var s = Math.floor(d % 3600 % 60)
+  return ((h > 0 ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (s < 10 ? '0' : '') + s)
+})
+
 var Player = Vue.extend({
   props: ['source'],
   template: '<audio id="player" v-bind:src="source.stream" controls autoplay></audio>'
@@ -25,7 +41,7 @@ var Controls = Vue.extend({
     <span class="controls">
       <a href="#" class="" v-on:click="$parent.prev"><i class="material-icons icon-medium round">skip_previous</i></a>
       <a href="#" class="" v-on:click="$parent.toggle">
-        <i class="material-icons icon-large round" v-if="playing">pause</i>
+        <i class="material-icons icon-large round playing" v-if="playing">pause</i>
         <i class="material-icons icon-large round" v-else>play_arrow</i>
       </a>
       <a href="#" class="" v-on:click="$parent.next"><i class="material-icons icon-medium round">skip_next</i></a>
@@ -61,17 +77,12 @@ new Vue({
     this.autoplay()
 
     var _this = this
-    // var myApp = new Framework7()
-    var myApp = new Framework7({
-      material: true
-    })
-
-    var progressbar = $('.progressbar')
+    var myApp = new Framework7()
+    // var myApp = new Framework7({
+    //   material: true
+    // })
 
     client.on('show', function (err, response) {
-      console.log('Loaded new playlist')
-      console.log(response.stations)
-
       myApp.addNotification({
         message: response.stations.length + ' items added to playlist!'
       })
@@ -84,12 +95,13 @@ new Vue({
       _this.autoplay()
     })
 
+    var $progressbar = $('.progressbar')
     $('#player').on('timeupdate', function () {
       _this.position = Math.floor(this.currentTime)
       _this.duration = Math.floor(this.duration)
 
       var progress = (_this.position * 100) / _this.duration
-      myApp.setProgressbar(progressbar, progress)
+      myApp.setProgressbar($progressbar, progress)
     })
 
     $('.open-about').on('click', function () {
@@ -123,7 +135,6 @@ new Vue({
       setTimeout(function () {
         $player.trigger('play')
         _this.playing = true
-
       }, 200)
 
     },
@@ -137,7 +148,6 @@ new Vue({
     pause: function () {
       console.log('Pause')
       $('#player').trigger('pause')
-      this.current = { title: 'Paused', stream: '' }
       this.playing = false
     },
 
@@ -159,7 +169,12 @@ new Vue({
       location.reload()
     },
 
+    favorite: function () {
+      console.log('Add/remove to/from favorites')
+    },
+
     load: function () {
+      this.playlist = []
       this.playlist = client.request('load')
     },
 

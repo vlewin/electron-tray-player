@@ -24,6 +24,17 @@
         display: none;
       }
 
+      .text-right {
+        text-align: right;
+      }
+
+      .right-position {
+        position: absolute;
+        right: 0;
+        top: 10px;
+        vertical-align: middle;
+      }
+
       .card {
         margin: 0;
       }
@@ -34,8 +45,30 @@
         background-position: center;
       }
 
+      .card .card-header.paused {
+        background-color: #fff;
+      }
+
+      .card .card-header.paused:before {
+        content: " ";
+        z-index: 10;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        font-size: 30px;
+        line-height: 250px;
+        right: 0;
+        right: 0;
+        content: "PAUSE";
+        text-align: center;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
       .card .card-header .chip {
-        /*font-weight: bold;*/
+        text-transform: uppercase;
+        background-color: rgba(0, 0, 0, 0.5);
       }
 
       a > i {
@@ -43,7 +76,7 @@
       }
 
       i:hover {
-        color: #2196f3!important;
+        color: #2196f4!important;
         border-color: #2196f3!important;
       }
 
@@ -67,6 +100,23 @@
         width: 60px;
         vertical-align: bottom;
         margin: 0;
+        position: relative;
+      }
+
+      i.icon-large.playing::after {
+        content: "";
+        border-radius: 50%;
+        border-bottom: 3px solid #9e9e9e;
+        border-top: 3px solid #9e9e9e;
+        border-left: 3px solid #9e9e9e;
+        border-right: 3px solid #2196f3;
+        /*border-color: #2196f3;*/
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        animation: loadingD 4s .1s cubic-bezier(.17,.37,.43,.67) infinite;
       }
 
       .controls i, .actions i {
@@ -85,19 +135,88 @@
         margin: 0;
       }
 
-      .right {
-        position: absolute;
-        right: 0;
-        top: 10px;
-        vertical-align: middle;
-      }
-
       .notifications .item-title {
         float: left;
       }
 
       .notifications .item-after {
         float:right;
+      }
+
+      @keyframes rotate-marker {
+        100% {
+          transform: rotateZ(360deg);
+        }
+      }
+
+      @keyframes loadingA {
+          0 {height: 15px;}
+          50% {height: 35px;}
+          100% {height: 15px;}
+      }
+
+      @keyframes loadingB {
+          0 {width: 15px;}
+          50% {width: 35px;}
+          100% {width: 15px;}
+      }
+
+      @keyframes loadingC {
+          0 {transform: translate(0,0);}
+          50% {transform: translate(0,15px);}
+          100% {transform: translate(0,0);}
+      }
+
+      @keyframes loadingD {
+          0 {transform: rotate(0deg);}
+          50% {transform: rotate(180deg);}
+          100% {transform: rotate(360deg);}
+          50% {
+              /*transform: translate(80px,0);*/
+              border-right-color: #99bfde;
+              /*width: 25px;*/
+          }
+      }
+
+      @keyframes loadingE {
+          0 {transform: rotate(0deg);}
+          100% {transform: rotate(360deg);}
+      }
+
+      @keyframes loadingF {
+          0% {opacity: 0;}
+          100% {opacity: 1;}
+      }
+
+      @keyframes loadingG {
+          0% {transform: translate(0,0) rotate(0deg);}
+          50% {transform: translate(70px,0) rotate(360deg);}
+          100% {transform: translate(0,0) rotate(0deg);}
+      }
+
+      @keyframes loadingH {
+          0% {width: 15px;}
+          50% {width: 35px; padding: 4px;}
+          100% {width: 15px;}
+      }
+
+      @keyframes loadingI {
+          100% {transform: rotate(360deg);}
+      }
+
+      @keyframes bounce  {
+        0%, 100% {transform: scale(0.0);}
+        50% {transform: scale(1.0);}
+      }
+
+      @keyframes loadingJ {
+        0%,100% {transform: translate(0,0);}
+
+        50% {
+            transform: translate(80px,0);
+            background-color: #f5634a;
+            width: 25px;
+        }
       }
     </style>
 
@@ -110,14 +229,23 @@
       </div>
 
       <div class="card">
-        <div v-bind:style="{ 'background-image': 'url(' + cover + ')'} " valign="bottom" class="card-header color-white no-border">
-          <div class="chip bg-gray color-white">
+        <div v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing }" valign="bottom" class="card-header color-white no-border">
+          <div class="chip title color-white">
+            <div class="chip-media bg-red">
+              <a href="#" v-on:click="favorite">
+                <i class="material-icons color-white">favorite_border</i>
+              </a>
+            </div>
             <div class="chip-label">{{ current.title }}</div>
           </div>
 
-          <div class="chip bg-gray">
-            <div class="chip-label"><i class="material-icons color-white">favorite_border</i></div>
-          </div>
+          <!-- <div class="chip bg-gray">
+            <div class="chip-label">
+              <a href="#" v-on:click="favorite">
+                <i class="material-icons color-white">favorite_border</i>
+              </a>
+            </div>
+          </div> -->
 
         </div>
 
@@ -129,9 +257,10 @@
               </span>
             </p>
 
-            <p class="color-gray">
-              Time: {{ position }} / {{ duration}}
-            </p>
+            <div class="row">
+              <div class="col-50">&nbsp;</div>
+              <div class="col-50 text-right color-gray">Time: {{ position | time }} / {{ duration | time }}</div>
+            </div>
           </div>
         </div>
 
@@ -158,7 +287,7 @@
           <div class="content-block-title">
             Playlist ({{ playlist.length }} items)
             <a href="#" class="close-popup">
-              <i class="material-icons right">close</i>
+              <i class="material-icons right-position">close</i>
             </a>
           </div>
 
@@ -166,8 +295,9 @@
             <ul>
               <li class="item-content" v-for="source in playlist">
                 <div class="item-media">
-                  <!-- <i class="icon icon-f7"></i> -->
-                  <i class="material-icons">favorite_border</i>
+                  <a href="#" class="link" v-on:click="favorite">
+                    <i class="material-icons">favorite_border</i>
+                  </a>
                 </div>
                 <div class="item-inner">
                   <div class="item-title">{{ source.title }}</div>
