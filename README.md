@@ -12,6 +12,7 @@
 - [x] Init version
 - [x] Online streams playback
 - [x] Local MP3 files playback
+- [ ] Offline mode
 - [ ] Favorites
 - [ ] German radio stations (http://www.radio.de/local-stations)
 - [ ] More fancy stuff and CSS3 animations (https://cssanimation.rocks)
