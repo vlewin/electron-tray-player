@@ -53,6 +53,7 @@ new Vue({
   el: '#app',
 
   data: {
+    app: new Framework7(),
     playing: false,
     current: { title: 'Paused', stream: '' },
     index: 0,
@@ -61,6 +62,7 @@ new Vue({
     duration: 0,
     defaultCover: './images/cover.jpg',
     message: 'Simple player!',
+    sources: ['radio', 'files'],
     playlist: [
       { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
       { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
@@ -77,19 +79,18 @@ new Vue({
     this.autoplay()
 
     var _this = this
-    var myApp = new Framework7()
-    // var myApp = new Framework7({
-    //   material: true
-    // })
 
     client.on('show', function (err, response) {
-      myApp.addNotification({
+
+      _this.app.closeModal('.popup-sources')
+
+      _this.app.addNotification({
         message: response.stations.length + ' items added to playlist!'
       })
 
       setTimeout(function () {
-        myApp.closeNotification('.notifications')
-      }, 1000)
+        _this.app.closeNotification('.notifications')
+      }, 2000)
 
       _this.playlist = response.stations
       _this.autoplay()
@@ -101,15 +102,7 @@ new Vue({
       _this.duration = Math.floor(this.duration)
 
       var progress = (_this.position * 100) / _this.duration
-      myApp.setProgressbar($progressbar, progress)
-    })
-
-    $('.open-about').on('click', function () {
-      myApp.popup('.popup-about')
-    })
-
-    $('.open-services').on('click', function () {
-      myApp.popup('.popup-services')
+      _this.app.setProgressbar($progressbar, progress)
     })
   },
 
@@ -173,9 +166,14 @@ new Vue({
       console.log('Add/remove to/from favorites')
     },
 
+    open: function () {
+      this.playlist = client.request('open')
+      // this.app.closeModal('.popup-sources')
+    },
+
     load: function () {
-      this.playlist = []
       this.playlist = client.request('load')
+      // this.app.closeModal('.popup-sources')
     },
 
     quite: function () {
