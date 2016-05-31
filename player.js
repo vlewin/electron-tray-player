@@ -54,18 +54,22 @@ new Vue({
 
   data: {
     app: new Framework7(),
-    playing: false,
     current: { title: 'Paused', stream: '' },
+    defaultCover: './images/cover.jpg',
+    playing: false,
     index: 0,
     progress: 0,
     position: 0,
     duration: 0,
-    defaultCover: './images/cover.jpg',
-    message: 'Simple player!',
-    sources: ['radio', 'files'],
+    muted: false,
+    volume: 0.5,
+    sources: [
+      { title: 'Playlist from http://muz-puls.ru', key: 'radio_ru' },
+      { title: 'Playlist from http://radio.de', key: 'radio_de' }
+    ],
     playlist: [
-      { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
-      { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
+      { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' }
+      // { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
     ]
   },
 
@@ -77,6 +81,7 @@ new Vue({
 
   ready: function () {
     this.autoplay()
+    this.setVolume(this.volume)
 
     var _this = this
 
@@ -106,6 +111,13 @@ new Vue({
     })
   },
 
+  watch: {
+    volume: function (val, oldVal) {
+      var _this = this
+      this.setVolume(val)
+    }
+  },
+
   methods: {
     autoplay: function () {
       this.current = this.playlist[0]
@@ -130,6 +142,21 @@ new Vue({
         _this.playing = true
       }, 200)
 
+    },
+
+    mute() {
+      this.muted = true
+      this.volume = 0
+    },
+
+    umute() {
+      this.muted = false
+      this.volume = 0.5
+    },
+
+    setVolume(value) {
+      this.muted = !value
+      $('#player')[0].volume = value
     },
 
     resume: function () {
@@ -168,16 +195,13 @@ new Vue({
 
     open: function () {
       this.playlist = client.request('open')
-      // this.app.closeModal('.popup-sources')
     },
 
-    load: function () {
-      this.playlist = client.request('load')
-      // this.app.closeModal('.popup-sources')
+    load: function (playlist) {
+      this.playlist = client.request('load', playlist)
     },
 
     quite: function () {
-      console.log('Quite')
       client.request('terminate')
     }
   },

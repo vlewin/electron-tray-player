@@ -156,6 +156,29 @@
         margin: 0;
       }
 
+      .volume-control i {
+        margin-top: -2px;
+        margin-right: 5px;
+        margin-left: -2px;
+      }
+
+      .volume-control input[type=range]::-webkit-slider-thumb {
+        height: 10px;
+        width: 10px;
+        background-color: #2196f3;
+        cursor: pointer;
+      }
+
+      .volume-control input[type=range]::-webkit-slider-thumb:hover,
+      .volume-control input[type=range]::-webkit-slider-thumb:focus,
+      .volume-control input[type=range]::-webkit-slider-thumb:active {
+        height: 16px;
+        width: 16px;
+        background: #f44336;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
       .notifications .item-title {
         float: left;
       }
@@ -273,9 +296,28 @@
               </span>
             </p>
 
-            <div class="row">
-              <div class="col-50">&nbsp;</div>
-              <div class="col-50 text-right color-gray">
+            <div class="row volume-control">
+              <div class="col-40">
+                <div class="row">
+                  <div class="col-15">
+                    <a href="#" v-on:click="muted ? umute() : mute()">
+                      <i class="material-icons" v-bind:class="[muted ? 'muted' : 'unmuted']">{{ muted ? 'volume_off' : 'volume_up' }}</i>
+                    </a>
+                  </div>
+
+                  <div class="col-75">
+                    <div class="range-slider">
+                      <input type="range" min="0" max="1" step="0.01" v-model="volume">
+                    </div>
+                  </div>
+
+                  <div class="col-10">
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-60 text-right color-gray">
                 <i class="material-icons icon-small">schedule</i>
                 {{ position | time }} / {{ duration | time }}
               </div>
@@ -314,23 +356,6 @@
               <li>
                 <div class="item-content">
                   <div class="item-media">
-                    <i class="material-icons icon-medium">wifi_tethering</i>
-                  </div>
-                  <div class="item-inner">
-                    <div class="item-title-row">
-                      <div class="item-title">Play live streams</div>
-                      <a href="#" class="link" v-on:click="load">
-                        <i class="material-icons">add_circle_outline</i>
-                      </a>
-                    </div>
-                    <div class="item-subtitle">Import online audio streams</div>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="item-content">
-                  <div class="item-media">
                     <i class="material-icons icon-medium color-gray">note_add</i>
                   </div>
                   <div class="item-inner">
@@ -341,6 +366,23 @@
                       </a>
                     </div>
                     <div class="item-subtitle">Import playlist from hard drive</div>
+                  </div>
+                </div>
+              </li>
+
+              <li v-for="source in sources">
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="material-icons icon-medium">wifi_tethering</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title-row">
+                      <div class="item-title">{{ source.title }}</div>
+                      <a href="#" class="link" v-on:click="load(source.key)">
+                        <i class="material-icons">add_circle_outline</i>
+                      </a>
+                    </div>
+                    <div class="item-subtitle">Import online audio streams</div>
                   </div>
                 </div>
               </li>
@@ -377,7 +419,7 @@
                 </div>
               </li>
             </ul>
-            <div class="list-block-label">List block label text goes here</div>
+            <div class="list-block-label">TODO: Add pagination (http://framework7.io/docs/infinite-scroll.html)</div>
           </div>
         </div>
       </div>
