@@ -10,21 +10,19 @@
     "build": "electron-packager . TrayPlayer --platform=darwin --arch=x64 --version=1.2.0 --app-version=1.0.0 --overwrite --asar=false --icon='./images/Icon.icns' --ignore='node_modules/electron-(packager|prebuild)'",
     "build:all": "electron-packager . TrayPlayer --platform=all --arch=x64 --version=1.2.0 --app-version=1.0.0 --overwrite --asar=false --ignore='node_modules/electron-(packager|prebuild)'"
   },
-
   "repository": {
     "type": "git",
     "url": "https://github.com/vlewin/electron-tray-player"
   },
-
   "author": "vlewin",
   "license": "MIT",
   "dependencies": {
-    "vue": "latest",
+    "glob": "^7.0.3",
     "jsdom": "latest",
+    "menubar": "latest",
     "store": "latest",
-    "menubar": "latest"
+    "vue": "latest"
   },
-
   "devDependencies": {
     "electron-connect": "latest",
     "electron-packager": "latest",
@@ -37,7 +35,6 @@
     "gulp": "latest",
     "standard": "latest"
   },
-
   "standard": {
     "ignore": [
       "TrayPlayer.app/**",

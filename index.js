@@ -1,15 +1,17 @@
 var path = require('path')
+var glob = require('glob')
 var menubar = require('menubar')
 var electron = require('electron')
 var dialog = electron.dialog
+var window = electron.window
 
 var jsdom = require('jsdom')
-var request = require('request')
 var fs = require('fs')
 var Server = require('electron-rpc/server')
-var app = new Server()
 
-var debug = false
+var debug = true
+var MODULES_DIR = path.join(path.dirname(__filename), 'modules')
+var modules = { }
 
 var opts = {
   dir: __dirname,
@@ -21,22 +23,49 @@ var opts = {
 }
 
 var menu = menubar(opts)
+var app = new Server()
 
 process.on('uncaughtException', function (err) {
   console.error('Exception', err)
+  app.destroy()
   menu.app.quit()
 })
 
 menu.on('ready', function ready() {
-  app.on('open', function load(ev, args) {
-    openFile()
+  app.on('sources', function sources(ev, args) {
+    glob.sync(MODULES_DIR + '/*.js').forEach(function (file) {
+      var name = path.parse(file).base.replace('.js', '')
+      modules[name] = require(file)
+    })
+
+    console.log('Loaded modules:', modules)
+    app.send('sources', { sources: Object.getOwnPropertyNames(modules) })
+  })
+
+  app.on('open', function open(ev, args) {
+    var playlist = []
+    var dir = dialog.showOpenDialog({
+      properties: ['openDirectory']
+    })[0]
+
+    var files = fs.readdirSync(dir)
+    for (var i in files) {
+      var name = files[i]
+      var file = path.join(dir, files[i])
+
+      if (file.endsWith('.mp3')) {
+        playlist.push({ title: name.replace('.mp3', ''), stream: file })
+      }
+    }
+
+    app.send('show', { playlist: playlist })
   })
 
   app.on('load', function load(ev, args) {
-    console.log('playlist')
-    loadPlaylist(ev.body)
-    // getRadioStations(0)
-    // radioDePlaylist()
+    var key = ev.body
+    var playlist = modules[key].load().then(function (playlist) {
+      app.send('show', { playlist: playlist })
+    })
   })
 
   app.on('terminate', function terminate(ev) {
@@ -54,40 +83,9 @@ menu.on('show', function show() {
   app.configure(menu.window.webContents)
 })
 
-function loadPlaylist(playlist) {
-  switch (playlist) {
-    case 'radio_ru':
-      radioRuPlaylist()
-      break
-
-    case 'radio_de':
-      radioDePlaylist()
-      break
-
-    default:
-      console.log('Unknown playlist name')
-      app.send('show', { stations: [] })
-  }
-}
-
-function openFile() {
-  var media = []
-  var dir = dialog.showOpenDialog({
-    properties: ['openDirectory']
-  })[0]
-
-  var files = fs.readdirSync(dir)
-  for (var i in files) {
-    var name = files[i]
-    var file = path.join(dir, files[i])
-
-    if (file.endsWith('.mp3')) {
-      media.push({ title: name.replace('.mp3', ''), stream: file })
-    }
-  }
-
-  app.send('show', { stations: media, page: 1 })
-}
+menu.on('after-create-window', function () {
+  app.configure(menu.window.webContents)
+})
 
 function radioDePlaylist() {
   var endpoint = 'https://api.radio.de/info/v2/search/recommended'
@@ -125,30 +123,30 @@ function radioDePlaylist() {
   request(options, callback)
 }
 
-function radioRuPlaylist() {
-  var page = page || 1
-  var url = 'http://muz-puls.ru/category/katalog-radio/page/' + page
-
-  jsdom.env({
-    url: url,
-    scripts: ['http://code.jquery.com/jquery.js'],
-    done: function (err, window) {
-      var list = []
-      var $ = window.$
-
-      $('div.item').each(function () {
-        var $item = $(this)
-        var $image = $item.find('img.attachment-thumbnail')
-        var $link = $item.find('span.play')
-
-        list.push({
-          title: $link.data('title'),
-          stream: $link.data('stream'),
-          image: $image.attr('src')
-        })
-      })
-
-      app.send('show', { stations: list, page: page })
-    }
-  })
-}
+// function radioRuPlaylist() {
+//   var page = page || 1
+//   var url = 'http://muz-puls.ru/category/katalog-radio/page/' + page
+//
+//   jsdom.env({
+//     url: url,
+//     scripts: ['http://code.jquery.com/jquery.js'],
+//     done: function (err, window) {
+//       var list = []
+//       var $ = window.$
+//
+//       $('div.item').each(function () {
+//         var $item = $(this)
+//         var $image = $item.find('img.attachment-thumbnail')
+//         var $link = $item.find('span.play')
+//
+//         list.push({
+//           title: $link.data('title'),
+//           stream: $link.data('stream'),
+//           image: $image.attr('src')
+//         })
+//       })
+//
+//       app.send('show', { stations: list, page: page })
+//     }
+//   })
+// }
