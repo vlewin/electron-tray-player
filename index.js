@@ -9,23 +9,18 @@ var fs = require('fs')
 var Server = require('electron-rpc/server')
 var app = new Server()
 
+var debug = false
+
 var opts = {
   dir: __dirname,
   icon: path.join(__dirname, 'images', 'Icon.png'),
   tooltip: 'MP3/Radio player',
   'preload-window': true,
-
-  // 'always-on-top': true,
-  // y: 25,
-  width: 500
-
-  // width: 1024,
-  // height: 400
+  width: debug ? 1000 : 500,
+  height: 400
 }
 
 var menu = menubar(opts)
-
-// require('electron-connect').client.create(menu.window)
 
 process.on('uncaughtException', function (err) {
   console.error('Exception', err)
@@ -50,7 +45,9 @@ menu.on('ready', function ready() {
 })
 
 menu.once('show', function () {
-  // menu.window.openDevTools({ detach: false })
+  if (debug) {
+    menu.window.openDevTools({ detach: false })
+  }
 })
 
 menu.on('show', function show() {
