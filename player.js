@@ -68,8 +68,12 @@ new Vue({
       { title: 'Playlist from http://radio.de', key: 'radio_de' }
     ],
     playlist: [
-      { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
-      { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
+      // { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
+      // { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
+
+      { title: 'Stream 1', stream: 'http://www.hubharp.com/web_sound/PurcellSongSpinShort.mp3' },
+      { title: 'Stream 2', stream: 'http://www.hubharp.com/web_sound/WalloonLilliShort.mp3' }
+
     ]
   },
 
