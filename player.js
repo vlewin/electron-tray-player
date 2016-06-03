@@ -64,8 +64,8 @@ new Vue({
     muted: false,
     volume: 0.5,
     sources: [
-      { title: 'Playlist from http://muz-puls.ru', key: 'radio_ru' },
-      { title: 'Playlist from http://radio.de', key: 'radio_de' }
+      // { title: 'Playlist from http://muz-puls.ru', key: 'radio_ru' },
+      // { title: 'Playlist from http://radio.de', key: 'radio_de' }
     ],
     playlist: [
       // { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
@@ -87,21 +87,28 @@ new Vue({
     this.autoplay()
     this.setVolume(this.volume)
 
+    // FIXME: Move to function
+    client.request('sources')
+
     var _this = this
 
-    client.on('show', function (err, response) {
+    client.on('sources', function (err, response) {
+      console.log('On source')
+      _this.sources = response.sources
+    })
 
+    client.on('show', function (err, response) {
       _this.app.closeModal('.popup-sources')
 
       _this.app.addNotification({
-        message: response.stations.length + ' items added to playlist!'
+        message: response.playlist.length + ' items added to playlist!'
       })
 
       setTimeout(function () {
         _this.app.closeNotification('.notifications')
       }, 2000)
 
-      _this.playlist = response.stations
+      _this.playlist = response.playlist
       _this.autoplay()
     })
 
@@ -195,6 +202,13 @@ new Vue({
       console.log('Next', this.index, this.current.title)
     },
 
+    title: function (song) {
+      console.log('Decorate title', song.title, song.artist)
+      var name = song.artist ? (song.artist + ' - ' + song.title) : song.title
+      console.log(name)
+      return name
+    },
+
     reload: function () {
       console.log('Reload')
       location.reload()
@@ -205,11 +219,11 @@ new Vue({
     },
 
     open: function () {
-      this.playlist = client.request('open')
+      client.request('open')
     },
 
     load: function (playlist) {
-      this.playlist = client.request('load', playlist)
+      client.request('load', playlist)
     },
 
     quite: function () {
