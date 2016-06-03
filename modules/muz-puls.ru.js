@@ -27,7 +27,6 @@ function load() {
           })
         })
 
-        console.log(list)
         resolve(list)
       }
     })
