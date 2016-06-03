@@ -68,8 +68,8 @@ new Vue({
       { title: 'Playlist from http://radio.de', key: 'radio_de' }
     ],
     playlist: [
-      { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' }
-      // { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
+      { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
+      { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
     ]
   },
 
@@ -109,6 +109,10 @@ new Vue({
       var progress = (_this.position * 100) / _this.duration
       _this.app.setProgressbar($progressbar, progress)
     })
+
+    $('#player').on('ended', function () {
+      _this.next()
+    })
   },
 
   watch: {
@@ -120,7 +124,8 @@ new Vue({
 
   methods: {
     autoplay: function () {
-      this.current = this.playlist[0]
+      this.index = 0
+      this.current = this.playlist[this.index]
       this.playing = true
     },
 
@@ -178,6 +183,8 @@ new Vue({
     },
 
     next: function () {
+      console.log(this.index)
+      console.log(this.playlist.length)
       this.index = (this.index + 1) < this.playlist.length ? (this.index + 1) : this.index
       this.current = this.playlist[this.index]
 
