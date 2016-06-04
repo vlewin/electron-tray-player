@@ -63,14 +63,11 @@ new Vue({
     duration: 0,
     muted: false,
     volume: 0.5,
-    sources: [
-      // { title: 'Playlist from http://muz-puls.ru', key: 'radio_ru' },
-      // { title: 'Playlist from http://radio.de', key: 'radio_de' }
-    ],
+    sources: [],
     playlist: [
+
       // { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
       // { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
-
       { title: 'Stream 1', stream: 'http://www.hubharp.com/web_sound/PurcellSongSpinShort.mp3' },
       { title: 'Stream 2', stream: 'http://www.hubharp.com/web_sound/WalloonLilliShort.mp3' }
 
