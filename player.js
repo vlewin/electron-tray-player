@@ -49,13 +49,14 @@ var Controls = Vue.extend({
   `
 })
 
-new Vue({
+var vm = new Vue({
   el: '#app',
 
   data: {
     app: new Framework7(),
     current: { title: 'Paused', stream: '' },
     defaultCover: './images/cover.jpg',
+    lastFmCover: false,
     playing: false,
     index: 0,
     progress: 0,
@@ -107,6 +108,21 @@ new Vue({
 
       _this.playlist = response.playlist
       _this.autoplay()
+    })
+
+    client.on('cover', function (err, response) {
+      console.log('*** Got cover image', response.image)
+      _this.lastFmCover = !!response.image
+      vm.$set('current.image', response.image)
+    })
+
+    $('#player').on('play', function (e) {
+      console.log('*** PLayback started', _this.current.title)
+      if (_this.current.artist) {
+        setTimeout(function () {
+          client.request('cover', _this.current.artist)
+        }, 2000)
+      }
     })
 
     var $progressbar = $('.progressbar')

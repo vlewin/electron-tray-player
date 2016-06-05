@@ -19,6 +19,7 @@
   "dependencies": {
     "glob": "^7.0.3",
     "jsdom": "latest",
+    "lastfmapi": "^0.1.1",
     "menubar": "latest",
     "store": "latest",
     "vue": "latest"

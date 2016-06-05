@@ -26,9 +26,13 @@ body {
 }
 
 .card .card-header {
-  height: 47vw;
+  height: 50vw;
   background-size: cover;
   background-position: center;
+}
+
+.card .card-header.cover {
+  background-position: top;
 }
 
 .card .card-header.paused {
@@ -38,6 +42,8 @@ body {
 .card .card-header a.right-position {
   right: 15px;
   font-weight: bold;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 100%;
 }
 
 .card .card-header.paused:before {
@@ -60,10 +66,12 @@ body {
 .card .card-header .chip {
   text-transform: uppercase;
   font-weight: bold;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .card .card-header .chip-media {
-  border: 3px solid #eee;
+  /*border: 2px solid #f44336;*/
+  border: 2px solid #fff;
 }
 
 a > i {

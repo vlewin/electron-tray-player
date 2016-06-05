@@ -19,15 +19,15 @@
       </div>
 
       <div class="card">
-        <div class="card-header color-white no-border" v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing }" valign="bottom">
+        <div class="card-header color-white no-border" v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing, 'cover': lastFmCover }" valign="bottom">
           <a href="#" class="right-position" v-on:click="quite">
             <i class="material-icons color-white close">close</i>
           </a>
 
-          <div class="chip title bg-white color-black">
-            <div class="chip-media bg-white">
+          <div class="chip title color-white">
+            <div class="chip-media">
               <a href="#" v-on:click="favorite">
-                <i class="material-icons color-red">favorite_border</i>
+                <i class="material-icons color-white">favorite_border</i>
               </a>
             </div>
             <div class="chip-label">{{ current.title }}</div>

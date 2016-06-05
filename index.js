@@ -6,17 +6,23 @@ var dialog = electron.dialog
 var jsdom = require('jsdom')
 var fs = require('fs')
 var Server = require('electron-rpc/server')
-
+var LastfmAPI = require('lastfmapi')
 var debug = false
 var modules = { }
+
+var lfm = new LastfmAPI({
+  api_key: '74ade13a78ff603957607591303b91a2',
+  secret: 'ca53f40ee0cf594d0fc3cc74dc263f6b'
+})
 
 var opts = {
   dir: __dirname,
   icon: path.join(__dirname, 'images', 'Icon.png'),
   tooltip: 'MP3/Radio player',
   'preload-window': true,
-  width: debug ? 1000 : 500,
-  height: 400
+  width: debug ? 1000 : 470,
+  height: 400,
+  resizable: false
 }
 
 var menu = menubar(opts)
@@ -35,6 +41,18 @@ menu.on('ready', function ready() {
     })
 
     app.send('sources', { sources: Object.getOwnPropertyNames(modules) })
+  })
+
+  app.on('cover', function cover(ev, args) {
+    var artist = ev.body
+    lfm.artist.getInfo({ artist: artist }, function (err, result) {
+      if (err) {
+        console.log('Cover for artist', artist,  err)
+      }
+
+      var image = result ? result.image[3]['#text'] : null
+      app.send('cover', { image: image })
+    })
   })
 
   app.on('open', function open(ev, args) {
