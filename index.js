@@ -49,7 +49,7 @@ menu.on('ready', function ready() {
   app.on('cover', function cover(ev, args) {
     lfm.track.getInfo(ev.body, function (err, result) {
       if (err) {
-        console.log('Cover for artist', args,  err)
+        console.log('ERROR: Cover for', ev.body,  err)
       }
 
       var image = (result && result.album) ? result.album.image[3]['#text'] : null
