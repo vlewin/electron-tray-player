@@ -6,7 +6,10 @@ var dialog = electron.dialog
 var jsdom = require('jsdom')
 var fs = require('fs')
 var Server = require('electron-rpc/server')
+
 var LastfmAPI = require('lastfmapi')
+var id3 = require('id3js')
+
 var debug = false
 var modules = { }
 
@@ -44,34 +47,53 @@ menu.on('ready', function ready() {
   })
 
   app.on('cover', function cover(ev, args) {
-    var artist = ev.body
-    lfm.artist.getInfo({ artist: artist }, function (err, result) {
+    lfm.track.getInfo(ev.body, function (err, result) {
       if (err) {
-        console.log('Cover for artist', artist,  err)
+        console.log('Cover for artist', args,  err)
       }
 
-      var image = result ? result.image[3]['#text'] : null
+      var image = (result && result.album) ? result.album.image[3]['#text'] : null
       app.send('cover', { image: image })
     })
   })
 
   app.on('open', function open(ev, args) {
-    var playlist = []
     var dir = dialog.showOpenDialog({
       properties: ['openDirectory']
     })[0]
 
+    var playlist = []
+    var iterator = 0
+
     var files = fs.readdirSync(dir)
-    for (var i in files) {
-      var name = files[i]
-      var file = path.join(dir, files[i])
 
-      if (file.endsWith('.mp3')) {
-        playlist.push({ title: name.replace('.mp3', ''), stream: file })
+    files.forEach(function (item) {
+      if (item.endsWith('.mp3')) {
+        var track = path.join(dir, item)
+
+        console.log(iterator, 'Get tags for', track)
+
+        id3({ file: track, type: id3.OPEN_LOCAL }, function (err, tags) {
+          console.log('Title', tags.title, 'artist', tags.artist)
+
+          if (tags.title && tags.artist) {
+            // FIXME: Cyrillic encoding
+            console.log('Tags found', tags)
+            var name = tags.artist + ' - ' + tags.title
+            playlist.push({ title: name, track: tags.title, artist: tags.artist, stream: track })
+          } else {
+            console.log('No tags')
+            playlist.push({ title: item, stream: track })
+          }
+
+          if (playlist.length == iterator) {
+            app.send('show', { playlist: playlist })
+          }
+        })
+
+        iterator++
       }
-    }
-
-    app.send('show', { playlist: playlist })
+    })
   })
 
   app.on('load', function load(ev, args) {

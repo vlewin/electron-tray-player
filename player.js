@@ -120,7 +120,8 @@ var vm = new Vue({
       console.log('*** PLayback started', _this.current.title)
       if (_this.current.artist) {
         setTimeout(function () {
-          client.request('cover', _this.current.artist)
+          var params = { artist: _this.current.artist, track: _this.current.track }
+          client.request('cover', params)
         }, 2000)
       }
     })
