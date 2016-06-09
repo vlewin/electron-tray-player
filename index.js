@@ -75,10 +75,9 @@ menu.on('ready', function ready() {
 
         id3({ file: track, type: id3.OPEN_LOCAL }, function (err, tags) {
           console.log('Title', tags.title, 'artist', tags.artist)
+          // FIXME: Cyrillic encoding
 
-          if (tags.title && tags.artist) {
-            // FIXME: Cyrillic encoding
-            console.log('Tags found', tags)
+          if (tags.title && !tags.title.includes('\u0000') && tags.artist && !tags.artist.includes('\u0000')) {
             var name = tags.artist + ' - ' + tags.title
             playlist.push({ title: name, track: tags.title, artist: tags.artist, stream: track })
           } else {
