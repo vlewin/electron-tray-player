@@ -2,12 +2,6 @@ var jsdom = require('jsdom')
 
 function load() {
   return new Promise(function (resolve, reject) {
-    console.log('Loaded module C')
-
-    var page = page || 1
-    var url = 'http://muz-puls.ru/category/katalog-radio/page/' + page
-
-    console.log('Loaded module A')
     var url = 'https://my-hit.me'
     var page = page || 1
     var link = 'url' + '/' + page
@@ -18,6 +12,8 @@ function load() {
       done: function (err, window) {
         var list = []
         var $ = window.$
+
+        console.log('my-hit.me', 'done')
 
         $('li.item').each(function () {
           var $item = $(this)
@@ -33,6 +29,7 @@ function load() {
           })
         })
 
+        console.log('my-hit', list)
         resolve(list)
       }
     })

@@ -11,7 +11,7 @@ function load() {
       url: url,
       scripts: ['http://code.jquery.com/jquery.js'],
       done: function (err, window) {
-        console.log('Done')
+        console.log('muz-puls.ru', 'done')
         var list = []
         var $ = window.$
 
@@ -26,6 +26,8 @@ function load() {
             image: $image.attr('src')
           })
         })
+
+        console.log('muz-puls', list)
 
         resolve(list)
       }
