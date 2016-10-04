@@ -14,7 +14,7 @@
 - [x] Local MP3 files playback
 - [ ] Offline mode
 - [x] Song cover from API (last.fm)
-- [ ] Parse MP3 tags if local file (http://blog.kaiserapps.com/2014/01/nodejs-id3-tag-libraries-which-is-best.html)
+- [x] Parse MP3 tags if local file (http://blog.kaiserapps.com/2014/01/nodejs-id3-tag-libraries-which-is-best.html)
 - [ ] Favorites
 - [ ] More fancy stuff and CSS3 animations (https://cssanimation.rocks)
 

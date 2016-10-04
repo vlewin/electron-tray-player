@@ -17,11 +17,13 @@ function load() {
 
         $('div.item').each(function () {
           var $item = $(this)
-          var $image = $item.find('img.attachment-thumbnail')
-          var $link = $item.find('span.play')
+          var $image = $item.find('img')
+          var $link = $item.find('a')
+
+          console.log()
 
           list.push({
-            title: $link.data('title'),
+            title: $link.attr('href'),
             stream: $link.data('stream'),
             image: $image.attr('src')
           })
