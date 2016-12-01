@@ -61,12 +61,15 @@ menu.on('ready', function ready() {
   app.on('open', function open() {
     var dir = dialog.showOpenDialog({
       properties: ['openDirectory']
-    })[0]
+    })
 
+    if (!dir) return
+
+    var directory = dir[0]
     var playlist = []
     var iterator = 0
 
-    var files = fs.readdirSync(dir)
+    var files = fs.readdirSync(directory)
 
     files.forEach(function (item) {
       if (item.endsWith('.mp3')) {
