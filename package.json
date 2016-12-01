@@ -7,8 +7,8 @@
   "scripts": {
     "test": "standard",
     "start": "gulp serve",
-    "build": "electron-packager . TrayPlayer --platform=darwin --arch=x64 --version=1.2.0 --app-version=1.0.0 --overwrite --asar=false --icon='./images/App.icns' --ignore='node_modules/electron-(packager|prebuild)'",
-    "build:all": "electron-packager . TrayPlayer --platform=all --arch=x64 --version=1.2.0 --app-version=1.0.0 --overwrite --asar=false --ignore='node_modules/electron-(packager|prebuild)'"
+    "build": "electron-packager . TrayPlayer --platform=darwin --arch=x64 --app-version=1.0.0 --overwrite --icon='./images/App.icns' --out=dist --ignore='node_modules/electron-(packager|prebuild)'",
+    "build:all": "electron-packager . TrayPlayer --platform=all --arch=x64 --app-version=1.0.0 --overwrite --icon='./images/App.icns' --out=dist --ignore='node_modules/electron-(packager|prebuild)'"
   },
   "repository": {
     "type": "git",
@@ -23,15 +23,14 @@
     "lastfmapi": "^0.1.1",
     "menubar": "latest",
     "store": "latest",
-    "vue": "latest"
+    "vue": "latest",
+    "electron-rpc": "latest"
   },
   "devDependencies": {
-    "babel-eslint": "^7.1.1",
     "electron": "^1.4.10",
     "electron-connect": "latest",
     "electron-packager": "latest",
     "electron-prebuilt": "latest",
-    "electron-rpc": "latest",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-html": "^1.5.1",
     "eslint-plugin-import": "^1.8.1",

@@ -25,6 +25,7 @@ var opts = {
   'preload-window': true,
   width: debug ? 1000 : 470,
   height: 400,
+  preloadWindow: true,
   resizable: false
 }
 
