@@ -1,7 +1,7 @@
 var jsdom = require('jsdom')
 
 function load() {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     var url = 'http://zf.fm/radio'
 
     jsdom.env({
@@ -29,7 +29,6 @@ function load() {
         resolve(list)
       }
     })
-
   })
 }
 

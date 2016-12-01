@@ -23,9 +23,9 @@ function load() {
         reject(error)
       }
 
-      if (!error && response.statusCode == 200) {
+      if (!error && response.statusCode === 200) {
         var list = []
-        for (i in body.pageItems) {
+        for (let i in body.pageItems) {
           var statiton = body.pageItems[i]
           list.push({
             title: statiton.name,

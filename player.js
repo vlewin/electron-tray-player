@@ -11,7 +11,7 @@ Vue.filter('time', function (value) {
     return 'Live stream'
   }
 
-  d = Number(value)
+  var d = Number(value)
   var h = Math.floor(d / 3600)
   var m = Math.floor(d % 3600 / 60)
   var s = Math.floor(d % 3600 % 60)
@@ -37,6 +37,8 @@ var Controls = Vue.component('controls', {
       return this.playing ? 'Pause' : 'Play'
     }
   },
+
+  /* eslint-disable rule-name */
   template: `
     <span class="controls">
       <a href="#" class="" v-on:click="$parent.prev"><i class="material-icons icon-medium round">skip_previous</i></a>
@@ -49,6 +51,7 @@ var Controls = Vue.component('controls', {
   `
 })
 
+/* eslint no-underscore-dangle: ["error", { "allow": ["_this"] }]*/
 var vm = new Vue({
   el: '#app',
 
@@ -69,8 +72,8 @@ var vm = new Vue({
 
       // { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
       // { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
-      { title: 'UFO Takeoff', artist: 'DEMO Stream', stream: 'http://soundbible.com/mp3/UFO_Takeoff-Sonidor-1604321570.mp3' },
-      { title: 'UFO Landing', artist: 'DEMO Stream', stream: 'http://soundbible.com/mp3/descending_craft-Sonidor-991848481.mp3' }
+      { title: 'UFO Takeoff', stream: 'http://soundbible.com/mp3/UFO_Takeoff-Sonidor-1604321570.mp3' },
+      { title: 'UFO Landing', stream: 'http://soundbible.com/mp3/descending_craft-Sonidor-991848481.mp3' }
 
     ]
   },
@@ -82,13 +85,19 @@ var vm = new Vue({
   },
 
   mounted: function () {
+    let _this = this
+
     this.autoplay()
     this.setVolume(this.volume)
 
+    $('body').keydown(function (e) {
+      if (e.keyCode === 32) {
+        _this.toggle()
+      }
+    })
+
     // FIXME: Move to function
     client.request('sources')
-
-    var _this = this
 
     client.on('sources', function (err, response) {
       console.log('On source')
@@ -112,15 +121,18 @@ var vm = new Vue({
 
     client.on('cover', function (err, response) {
       console.warn('*** Got cover image', response.image)
-      if(!!response.image) {
+      if (!!response.image) {
         _this.lastFmCover = !!response.image
         vm.$set('current.image', response.image)
+      } else {
+        vm.$set('current.skipImage', true)
       }
     })
 
-    $('#player').on('play', function (e) {
+    $('#player').on('play', function () {
       console.log('*** PLayback started', _this.current.title)
-      if (_this.current.artist) {
+      if (_this.current.skipImage && _this.current.artist) {
+        console.log('Request image from LastfmAPI for', _this.current.artist, _this.current.track)
         setTimeout(function () {
           var params = { artist: _this.current.artist, track: _this.current.track }
           client.request('cover', params)
@@ -143,8 +155,7 @@ var vm = new Vue({
   },
 
   watch: {
-    volume: function (val, oldVal) {
-      var _this = this
+    volume: function (val) {
       this.setVolume(val)
     }
   },
@@ -157,7 +168,11 @@ var vm = new Vue({
     },
 
     toggle: function () {
-      this.playing ? this.pause() : this.resume()
+      if (this.playing) {
+        this.pause()
+      } else {
+        this.resume()
+      }
     },
 
     play: function (index) {
@@ -173,7 +188,6 @@ var vm = new Vue({
         $player.trigger('play')
         _this.playing = true
       }, 200)
-
     },
 
     mute() {
