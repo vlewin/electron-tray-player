@@ -67,6 +67,7 @@ var vm = new Vue({
     duration: 0,
     muted: false,
     volume: 0.5,
+    loading: null,
     sources: [],
     playlist: [
 
@@ -252,7 +253,8 @@ var vm = new Vue({
       client.request('open')
     },
 
-    load: function (playlist) {
+    load: function (playlist, index) {
+      this.loading = index
       client.request('load', playlist)
     },
 

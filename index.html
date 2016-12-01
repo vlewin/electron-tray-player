@@ -118,7 +118,7 @@
                 </div>
               </li>
 
-              <li v-for="source in sources">
+              <li v-for="(source, index) in sources">
                 <div class="item-content">
                   <div class="item-media">
                     <i class="material-icons icon-medium">wifi_tethering</i>
@@ -126,8 +126,9 @@
                   <div class="item-inner">
                     <div class="item-title-row">
                       <div class="item-title">Import playlist from '{{ source }}'</div>
-                      <a href="#" class="link" v-on:click="load(source)">
-                        <i class="material-icons">add_circle_outline</i>
+                      <a href="#" class="link" v-on:click="load(source, index)">
+                        <i class="material-icons spin" v-if="loading == index">loop</i>
+                        <i class="material-icons" v-else>add_circle_outline</i>
                       </a>
                     </div>
                     <div class="item-subtitle">Online playlist</div>
