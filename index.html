@@ -30,14 +30,16 @@
                 <i class="material-icons color-white">favorite_border</i>
               </a>
             </div>
-            <div class="chip-label">{{ current.title }}</div>
+            <div class="chip-label">
+              {{ current.title }}
+            </div>
           </div>
         </div>
 
         <div class="card-content">
           <div class="card-content-inner">
             <p>
-              <span class="progressbar" data-progress="{{progress}}">
+              <span class="progressbar" :data-progress="progress">
                 <span></span>
               </span>
             </p>
@@ -149,7 +151,7 @@
 
           <div class="list-block">
             <ul>
-              <li class="item-content" v-for="stream in playlist">
+              <li class="item-content" v-for="(stream, index) in playlist">
                 <div class="item-media">
                   <!-- <a href="#" class="link" v-on:click="favorite">
                     <i class="material-icons">favorite_border</i>
@@ -160,12 +162,11 @@
                 <div class="item-inner">
                   <div class="item-title">{{ stream.title }}</div>
                   <div class="item-after">
-                    <a href="#" class="link" v-on:click="favorite">
-                      <i class="material-icons">favorite_border</i>
+                    <a href="#" class="link" v-on:click="current == playlist[index] ? pause() : play(index)">
+                      <i class="material-icons round" v-bind:class="{ active: current == playlist[index]}">{{ current == playlist[index] ? 'pause' : 'play_arrow' }}</i>
                     </a>
-
-                    <a href="#" class="link" v-on:click="current == playlist[$index] ? pause() : play($index)">
-                      <i class="material-icons">{{ current == playlist[$index] ? 'pause' : 'play_arrow' }}</i>
+                    <a href="#" class="link" v-on:click="favorite">
+                      <i class="material-icons round">favorite_border</i>
                     </a>
                   </div>
                 </div>

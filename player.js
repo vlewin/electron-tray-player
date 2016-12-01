@@ -1,4 +1,4 @@
-var Vue = require('vue')
+var Vue = require('vue/dist/vue.js')
 var Client = require('electron-rpc/client')
 var client = new Client()
 
@@ -18,13 +18,13 @@ Vue.filter('time', function (value) {
   return ((h > 0 ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (s < 10 ? '0' : '') + s)
 })
 
-var Player = Vue.extend({
+var Player = Vue.component('player', {
   props: ['source'],
   template: '<audio id="player" v-bind:src="source.stream" controls autoplay></audio>'
 })
 
 // FIXME: Add loading animation: http://www.alessioatzeni.com/blog/css3-loading-animation-loop/
-var Controls = Vue.extend({
+var Controls = Vue.component('controls', {
   props: ['playing'],
   computed: {
     stream: function () {
@@ -81,7 +81,7 @@ var vm = new Vue({
     }
   },
 
-  ready: function () {
+  mounted: function () {
     this.autoplay()
     this.setVolume(this.volume)
 
@@ -111,9 +111,11 @@ var vm = new Vue({
     })
 
     client.on('cover', function (err, response) {
-      console.log('*** Got cover image', response.image)
-      _this.lastFmCover = !!response.image
-      vm.$set('current.image', response.image)
+      console.warn('*** Got cover image', response.image)
+      if(!!response.image) {
+        _this.lastFmCover = !!response.image
+        vm.$set('current.image', response.image)
+      }
     })
 
     $('#player').on('play', function (e) {
