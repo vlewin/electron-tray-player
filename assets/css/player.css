@@ -78,14 +78,9 @@ a > i {
   color: #888;
 }
 
-a > i:not(.close):hover {
+a > i:not(.close):not(.active):hover {
   color: #2196f4!important;
   border-color: #2196f3!important;
-}
-
-i.round {
-  border: 3px solid #888;
-  border-radius: 100%;
 }
 
 i.icon-small {
@@ -150,6 +145,11 @@ i.icon-large.playing::after {
   margin: 0;
 }
 
+.controls i.round {
+  border: 3px solid #888;
+  border-radius: 100%;
+}
+
 .volume-control i {
   margin-top: -2px;
   margin-right: 5px;
@@ -171,6 +171,22 @@ i.icon-large.playing::after {
   background: #f44336;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+.list-block i.round {
+  line-height: 16px;
+  font-size: 16px;
+  vertical-align: middle;
+  border-radius: 100%;
+  margin: 2px 5px;
+  border: 2px solid #888;
+  padding: 2px;
+}
+
+.list-block i.active {
+  border: 2px solid #2196f4;
+  background: #2196f4;
+  color: #fff;
 }
 
 .notifications .item-title {
