@@ -69,8 +69,8 @@ var vm = new Vue({
 
       // { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
       // { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
-      { title: 'Stream 1', stream: 'http://www.hubharp.com/web_sound/PurcellSongSpinShort.mp3' },
-      { title: 'Stream 2', stream: 'http://www.hubharp.com/web_sound/WalloonLilliShort.mp3' }
+      { title: 'UFO Takeoff', artist: 'DEMO Stream', stream: 'http://soundbible.com/mp3/UFO_Takeoff-Sonidor-1604321570.mp3' },
+      { title: 'UFO Landing', artist: 'DEMO Stream', stream: 'http://soundbible.com/mp3/descending_craft-Sonidor-991848481.mp3' }
 
     ]
   },
