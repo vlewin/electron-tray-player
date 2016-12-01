@@ -3,7 +3,6 @@ var glob = require('glob')
 var menubar = require('menubar')
 var electron = require('electron')
 var dialog = electron.dialog
-var jsdom = require('jsdom')
 var fs = require('fs')
 var Server = require('electron-rpc/server')
 
@@ -12,7 +11,7 @@ var id3 = require('id3js')
 
 var debug = false
 var modules = { }
-var modules_path = path.join(__dirname, 'modules')
+const MODULES_PATH = path.join(__dirname, 'modules')
 
 var lfm = new LastfmAPI({
   api_key: '74ade13a78ff603957607591303b91a2',
@@ -38,19 +37,19 @@ process.on('uncaughtException', function (err) {
 })
 
 menu.on('ready', function ready() {
-  app.on('sources', function sources(ev, args) {
-    glob.sync(modules_path + '/*.js').forEach(function (file) {
+  app.on('sources', function sources() {
+    glob.sync(MODULES_PATH + '/*.js').forEach(function (file) {
       var name = path.parse(file).base.replace('.js', '')
-      modules[name] = require(file)
+      modules[name] = require(file) // eslint-disable-line global-require
     })
 
     app.send('sources', { sources: Object.getOwnPropertyNames(modules) })
   })
 
-  app.on('cover', function cover(ev, args) {
+  app.on('cover', function cover(ev) {
     lfm.track.getInfo(ev.body, function (err, result) {
       if (err) {
-        console.log('ERROR: Cover for', ev.body,  err)
+        console.log('ERROR: Cover for', ev.body, err)
       }
 
       var image = (result && result.album) ? result.album.image[3]['#text'] : null
@@ -58,7 +57,7 @@ menu.on('ready', function ready() {
     })
   })
 
-  app.on('open', function open(ev, args) {
+  app.on('open', function open() {
     var dir = dialog.showOpenDialog({
       properties: ['openDirectory']
     })[0]
@@ -87,7 +86,7 @@ menu.on('ready', function ready() {
             playlist.push({ title: item, stream: track })
           }
 
-          if (playlist.length == iterator) {
+          if (playlist.length === iterator) {
             app.send('show', { playlist: playlist })
           }
         })
@@ -97,14 +96,14 @@ menu.on('ready', function ready() {
     })
   })
 
-  app.on('load', function load(ev, args) {
+  app.on('load', function load(ev) {
     var key = ev.body
-    var playlist = modules[key].load().then(function (playlist) {
+    modules[key].load().then(function (playlist) {
       app.send('show', { playlist: playlist })
     })
   })
 
-  app.on('terminate', function terminate(ev) {
+  app.on('terminate', function terminate() {
     menu.app.quit()
   })
 })
