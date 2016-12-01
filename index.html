@@ -151,13 +151,19 @@
             <ul>
               <li class="item-content" v-for="stream in playlist">
                 <div class="item-media">
-                  <a href="#" class="link" v-on:click="favorite">
+                  <!-- <a href="#" class="link" v-on:click="favorite">
                     <i class="material-icons">favorite_border</i>
-                  </a>
+                  </a> -->
+                  <img v-bind:src="stream.image" width="44" v-if="stream.image">
+                  <img src="https://image.freepik.com/free-icon/audio-wave_318-104765.jpg" width="44" v-else>
                 </div>
                 <div class="item-inner">
                   <div class="item-title">{{ stream.title }}</div>
                   <div class="item-after">
+                    <a href="#" class="link" v-on:click="favorite">
+                      <i class="material-icons">favorite_border</i>
+                    </a>
+
                     <a href="#" class="link" v-on:click="current == playlist[$index] ? pause() : play($index)">
                       <i class="material-icons">{{ current == playlist[$index] ? 'pause' : 'play_arrow' }}</i>
                     </a>
