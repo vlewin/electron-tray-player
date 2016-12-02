@@ -107,6 +107,7 @@ var vm = new Vue({
 
     client.on('show', function (err, response) {
       _this.app.closeModal('.popup-sources')
+      _this.loading = null
 
       _this.app.addNotification({
         message: response.playlist.length + ' items added to playlist!'
