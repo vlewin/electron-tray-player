@@ -63,6 +63,7 @@ var vm = new Vue({
     defaultCover: './images/cover.jpg',
     lastFmCover: false,
     playing: false,
+    debug: false,
     index: 0,
     progress: 0,
     position: 0,
@@ -89,9 +90,22 @@ var vm = new Vue({
 
   mounted: function () {
     let _this = this
+    if(!this.debug) {
+      console.log = function() {}
+    }
 
-    this.autoplay()
+    // FIXME: Move to function
+    client.request('sources')
     this.setVolume(this.volume)
+
+    if(this.playlist.length) {
+      this.autoplay()
+    } else {
+      console.log('No playlist items, check last played playlist and load')
+      setTimeout(function() {
+        _this.loadLastPlaylist()
+      }, 500)
+    }
 
     $('body').keydown(function (e) {
       if (e.keyCode === 32) {
@@ -99,15 +113,13 @@ var vm = new Vue({
       }
     })
 
-    // FIXME: Move to function
-    client.request('sources')
-
     client.on('sources', function (err, response) {
-      console.log('On source')
+      console.log('on source')
       _this.sources = response.sources
     })
 
     client.on('show', function (err, response) {
+      console.log('on show')
       _this.app.closeModal('.popup-sources')
       _this.loading = null
 
@@ -169,7 +181,7 @@ var vm = new Vue({
       if(this.playlist.length) {
         this.index = 0
         this.current = this.playlist[this.index]
-        this.playing = true        
+        this.playing = true
       }
     },
 
@@ -259,8 +271,28 @@ var vm = new Vue({
     },
 
     load: function (playlist, index) {
+      console.log('load playlist', playlist)
       this.loading = index
       client.request('load', playlist)
+
+      this.rememberLastPlaylist(playlist)
+    },
+
+    loadLastPlaylist() {
+      console.log('find last playlist')
+      this.app.popup('.popup-sources')
+
+      let playlist = Store.get('playlist')
+
+      if(playlist) {
+        console.log('load last playlist', playlist)
+        this.load(playlist, this.sources.indexOf(playlist))
+      }
+    },
+
+    rememberLastPlaylist(playlist) {
+      console.log('remember playlist', playlist)
+      Store.set('playlist', playlist)
     },
 
     quite: function () {
