@@ -1,6 +1,8 @@
-var Vue = require('vue/dist/vue.js')
-var Client = require('electron-rpc/client')
-var client = new Client()
+let Vue = require('vue/dist/vue.js')
+let Store = require('store')
+let Client = require('electron-rpc/client')
+let client = new Client()
+
 
 Vue.filter('time', function (value) {
   if (isNaN(value)) {
@@ -73,8 +75,8 @@ var vm = new Vue({
 
       // { title: 'Stream 1', stream: 'http://tinyurl.com/jfdsl7s' },
       // { title: 'Stream 2', stream: 'http://tinyurl.com/jj4tysv' }
-      { title: 'UFO Takeoff', stream: 'http://soundbible.com/mp3/UFO_Takeoff-Sonidor-1604321570.mp3' },
-      { title: 'UFO Landing', stream: 'http://soundbible.com/mp3/descending_craft-Sonidor-991848481.mp3' }
+      // { title: 'UFO Takeoff', stream: 'http://soundbible.com/mp3/UFO_Takeoff-Sonidor-1604321570.mp3' },
+      // { title: 'UFO Landing', stream: 'http://soundbible.com/mp3/descending_craft-Sonidor-991848481.mp3' }
 
     ]
   },
@@ -164,9 +166,11 @@ var vm = new Vue({
 
   methods: {
     autoplay: function () {
-      this.index = 0
-      this.current = this.playlist[this.index]
-      this.playing = true
+      if(this.playlist.length) {
+        this.index = 0
+        this.current = this.playlist[this.index]
+        this.playing = true        
+      }
     },
 
     toggle: function () {
