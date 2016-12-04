@@ -41,6 +41,7 @@ menu.on('ready', function ready() {
   app.on('sources', function sources() {
     glob.sync(MODULES_PATH + '/*.js').forEach(function (file) {
       var name = path.parse(file).base.replace('.js', '')
+      console.log('*** Found module:', name, 'in file:', file)
       modules[name] = require(file) // eslint-disable-line global-require
     })
 
@@ -73,7 +74,7 @@ menu.on('ready', function ready() {
 
     files.forEach(function (item) {
       if (item.endsWith('.mp3')) {
-        var track = path.join(dir, item)
+        var track = path.join(directory, item)
 
         console.log(iterator, 'Get tags for', track)
 
@@ -102,9 +103,15 @@ menu.on('ready', function ready() {
 
   app.on('load', function load(ev) {
     var key = ev.body
-    modules[key].load().then(function (playlist) {
-      app.send('show', { playlist: playlist })
-    })
+    console.log(modules)
+    let module = modules[key]
+    if(module) {
+      modules[key].load().then(function (playlist) {
+        app.send('show', { playlist: playlist })
+      })
+    } else {
+      console.warn('WARN:', 'Playlist/module:', key, 'not found!')
+    }
   })
 
   app.on('terminate', function terminate() {
