@@ -46,6 +46,11 @@ body {
   border-radius: 100%;
 }
 
+/*FIXME: Close icon is covered by pause overlay*/
+.card .card-header i.close {
+  z-index: 10000;
+}
+
 .card .card-header.paused:before {
   content: " ";
   z-index: 10;
