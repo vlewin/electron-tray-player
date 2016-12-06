@@ -19,7 +19,7 @@
       </div>
 
       <div class="card">
-        <div class="card-header color-white no-border" v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing, 'cover': lastFmCover }" valign="bottom">
+        <div class="card-header color-white no-border" v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing, 'loading': loading, 'cover': lastFmCover }" valign="bottom">
           <a href="#" class="right-position" v-on:click="quite">
             <i class="material-icons color-white close">close</i>
           </a>
@@ -81,7 +81,7 @@
               <i class="material-icons icon-medium">playlist_add</i>
             </a>
 
-            <a href="#" data-popup=".popup-playlist" class="open-popup">
+            <a href="#" data-popup=".popup-playlist" class="open-popup" v-bind:class="{ disabled: !playlist.length }">
               <i class="material-icons icon-medium last">playlist_play</i>
             </a>
           </p>
@@ -127,7 +127,7 @@
                     <div class="item-title-row">
                       <div class="item-title">Import playlist from '{{ source }}'</div>
                       <a href="#" class="link" v-on:click="load(source, index)">
-                        <i class="material-icons spin" v-if="loading == index">loop</i>
+                        <i class="material-icons spin" v-if="loadingPlaylist == index">loop</i>
                         <i class="material-icons" v-else>add_circle_outline</i>
                       </a>
                     </div>

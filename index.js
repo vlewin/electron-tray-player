@@ -21,8 +21,7 @@ var lfm = new LastfmAPI({
 var opts = {
   dir: __dirname,
   icon: path.join(__dirname, 'images', 'Icon.png'),
-  tooltip: 'MP3/Radio player',
-  'preload-window': true,
+  tooltip: 'MP3/Radio tray player',
   width: debug ? 1000 : 470,
   height: 400,
   preloadWindow: true,

@@ -43,12 +43,16 @@ var Controls = Vue.component('controls', {
   /* eslint-disable rule-name */
   template: `
     <span class="controls">
-      <a href="#" class="" v-on:click="$parent.prev"><i class="material-icons icon-medium round">skip_previous</i></a>
-      <a href="#" class="" v-on:click="$parent.toggle">
+      <a href="#" v-bind:class="{ disabled: !$parent.playlist.length }" v-on:click="$parent.prev">
+        <i class="material-icons icon-medium round">skip_previous</i>
+      </a>
+      <a href="#" v-bind:class="{ disabled: !$parent.playlist.length }" v-on:click="$parent.toggle">
         <i class="material-icons icon-large round playing" v-if="playing">pause</i>
         <i class="material-icons icon-large round" v-else>play_arrow</i>
       </a>
-      <a href="#" class="" v-on:click="$parent.next"><i class="material-icons icon-medium round">skip_next</i></a>
+      <a href="#" v-bind:class="{ disabled: !$parent.playlist.length }" v-on:click="$parent.next">
+        <i class="material-icons icon-medium round">skip_next</i>
+      </a>
     </span>
   `
 })
@@ -70,7 +74,8 @@ var vm = new Vue({
     duration: 0,
     muted: false,
     volume: 0.5,
-    loading: null,
+    loading: false,
+    loadingPlaylist: null,
     sources: [],
     playlist: [
 
@@ -121,7 +126,8 @@ var vm = new Vue({
     client.on('show', function (err, response) {
       console.log('on show')
       _this.app.closeModal('.popup-sources')
-      _this.loading = null
+      _this.loadingPlaylist = null
+      _this.loading = false
 
       _this.app.addNotification({
         message: response.playlist.length + ' items added to playlist!'
@@ -147,6 +153,8 @@ var vm = new Vue({
 
     $('#player').on('play', function () {
       console.log('*** PLayback started', _this.current.title)
+      _this.loading = false
+      _this.playing = true
       if (_this.current.skipImage && _this.current.artist) {
         console.log('Request image from LastfmAPI for', _this.current.artist, _this.current.track)
         setTimeout(function () {
@@ -238,6 +246,7 @@ var vm = new Vue({
     prev: function () {
       this.index = (this.index - 1) < 0 ? 0 : (this.index - 1)
       this.current = this.playlist[this.index]
+      this.loading = true
       console.log('Previous', this.index, this.current.title)
     },
 
@@ -246,7 +255,7 @@ var vm = new Vue({
       console.log(this.playlist.length)
       this.index = (this.index + 1) < this.playlist.length ? (this.index + 1) : this.index
       this.current = this.playlist[this.index]
-
+      this.loading = true
       console.log('Next', this.index, this.current.title)
     },
 
@@ -272,7 +281,7 @@ var vm = new Vue({
 
     load: function (playlist, index) {
       console.log('load playlist', playlist)
-      this.loading = index
+      this.loadingPlaylist = index
       client.request('load', playlist)
 
       this.rememberLastPlaylist(playlist)

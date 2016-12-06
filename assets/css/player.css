@@ -39,6 +39,10 @@ body {
   background-color: #fff;
 }
 
+.card .card-header.loading {
+  background-color: #fff;
+}
+
 .card .card-header a.right-position {
   right: 15px;
   font-weight: bold;
@@ -51,21 +55,26 @@ body {
   z-index: 10000;
 }
 
-.card .card-header.paused:before {
-  content: " ";
+.card .card-header.paused:before, .card .card-header.loading:before {
   z-index: 10;
   position: absolute;
   margin: auto;
   top: 0;
   left: 0;
   bottom: 0;
+  right: 0;
   font-size: 30px;
   line-height: 250px;
-  right: 0;
-  right: 0;
-  content: "PAUSE";
   text-align: center;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.card .card-header.paused:before {
+  content: "PAUSED";
+}
+
+.card .card-header.loading:before {
+  content: "LOADING...";
 }
 
 .card .card-header .chip {
@@ -139,7 +148,7 @@ i.icon-large.playing::after {
 }
 
 .controls i, .actions i {
-  margin: 10px 5px;
+  margin: 10px 0px;
 }
 
 .actions i.last {
@@ -159,6 +168,7 @@ i.icon-large.playing::after {
   margin-top: -2px;
   margin-right: 5px;
   margin-left: -2px;
+  line-height: 24px;
 }
 
 .volume-control input[type=range]::-webkit-slider-thumb {
