@@ -43,14 +43,14 @@ var Controls = Vue.component('controls', {
   /* eslint-disable rule-name */
   template: `
     <span class="controls">
-      <a href="#" v-bind:class="{ disabled: !$parent.playlist.length }" v-on:click="$parent.prev">
+      <a href="#" v-bind:class="{ disabled: !$parent.playlist.length || $parent.firstItemInPlaylist }" v-on:click="$parent.prev">
         <i class="material-icons icon-medium round">skip_previous</i>
       </a>
       <a href="#" v-bind:class="{ disabled: !$parent.playlist.length }" v-on:click="$parent.toggle">
         <i class="material-icons icon-large round playing" v-if="playing">pause</i>
         <i class="material-icons icon-large round" v-else>play_arrow</i>
       </a>
-      <a href="#" v-bind:class="{ disabled: !$parent.playlist.length }" v-on:click="$parent.next">
+      <a href="#" v-bind:class="{ disabled: !$parent.playlist.length || $parent.lastItemInPlaylist }" v-on:click="$parent.next">
         <i class="material-icons icon-medium round">skip_next</i>
       </a>
     </span>
@@ -65,9 +65,9 @@ var vm = new Vue({
     app: new Framework7(),
     current: { title: 'Paused', stream: '' },
     defaultCover: './images/cover.jpg',
-    lastFmCover: false,
+    lastFmCover: true,
     playing: false,
-    debug: false,
+    debug: true,
     index: 0,
     progress: 0,
     position: 0,
@@ -88,8 +88,16 @@ var vm = new Vue({
   },
 
   computed: {
-    cover: function () {
+    cover() {
       return this.current.image ? this.current.image : this.defaultCover
+    },
+
+    firstItemInPlaylist() {
+      return this.index === 0
+    },
+
+    lastItemInPlaylist() {
+      return (this.index === this.playlist.length - 1)
     }
   },
 
@@ -143,22 +151,24 @@ var vm = new Vue({
 
     client.on('cover', function (err, response) {
       console.warn('*** Got cover image', response.image)
-      if (!!response.image) {
-        _this.lastFmCover = !!response.image
-        vm.$set('current.image', response.image)
+      _this.lastFmCover = !!response.image
+
+      if (_this.lastFmCover) {
+        Vue.set(_this.current, 'image', response.image)
       } else {
-        vm.$set('current.skipImage', true)
+        console.warn('No cover image found!')
+        // Vue.set(_this.current, 'skipImage', true)
       }
     })
 
     $('#player').on('play', function () {
-      console.log('*** PLayback started', _this.current.title)
+      console.log('*** Playback started', _this.current.title)
       _this.loading = false
       _this.playing = true
-      if (_this.current.skipImage && _this.current.artist) {
-        console.log('Request image from LastfmAPI for', _this.current.artist, _this.current.track)
+      if (_this.current.track && _this.current.artist) {
+        console.log('Request image from LastfmAPI for', _this.current.track, _this.current.artist)
         setTimeout(function () {
-          var params = { artist: _this.current.artist, track: _this.current.track }
+          var params = { track: _this.current.track, artist: _this.current.artist }
           client.request('cover', params)
         }, 2000)
       }
@@ -243,6 +253,7 @@ var vm = new Vue({
       this.playing = false
     },
 
+    // FIXME: Refactor prev and next methods
     prev: function () {
       this.index = (this.index - 1) < 0 ? 0 : (this.index - 1)
       this.current = this.playlist[this.index]
@@ -250,13 +261,21 @@ var vm = new Vue({
       console.log('Previous', this.index, this.current.title)
     },
 
+    // FIXME: Refactor prev and next methods
     next: function () {
       console.log(this.index)
       console.log(this.playlist.length)
-      this.index = (this.index + 1) < this.playlist.length ? (this.index + 1) : this.index
-      this.current = this.playlist[this.index]
-      this.loading = true
-      console.log('Next', this.index, this.current.title)
+      this.nextIndex = this.index + 1
+      this.lastTrack = (this.nextIndex >= this.playlist.length)
+
+      if(this.lastTrack) {
+        console.warn('Last track in playlist')
+      } else {
+        this.index = this.nextIndex
+        this.current = this.playlist[this.index]
+        this.loading = true
+        console.log('Next', this.index, this.current.title)
+      }
     },
 
     title: function (song) {
