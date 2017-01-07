@@ -1,6 +1,6 @@
 var jsdom = require('jsdom')
 
-function load() {
+function load () {
   return new Promise(function (resolve) {
     var url = 'http://zf.fm/radio'
 
@@ -8,6 +8,8 @@ function load() {
       url: url,
       scripts: ['http://code.jquery.com/jquery.js'],
       done: function (err, window) {
+        if (err) { throw err }
+
         var list = []
         var $ = window.$
 

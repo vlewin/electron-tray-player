@@ -1,9 +1,0 @@
-{
-    "preset": "airbnb",
-
-    "disallowTrailingComma": true,
-    "requireTrailingComma": false,
-    "disallowSemicolons": true,
-    "requireSemicolons": false,
-    "maximumLineLength": { "value": 160, "allExcept": [ "functionSignature" ] }
-}

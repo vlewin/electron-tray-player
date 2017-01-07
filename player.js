@@ -57,7 +57,7 @@ var Controls = Vue.component('controls', {
 })
 
 /* eslint no-underscore-dangle: ["error", { "allow": ["_this"] }]*/
-var vm = new Vue({
+new Vue({
   el: '#app',
 
   data: {
@@ -139,12 +139,24 @@ var vm = new Vue({
       }
     })
 
-    client.on('sources', function (err, response) {
+    client.on('sources', function (error, response) {
+      if (error) {
+        _this.app.addNotification({
+          message: error
+        })
+      }
+
       console.log('on source')
       _this.sources = response.sources
     })
 
-    client.on('show', function (err, response) {
+    client.on('show', function (error, response) {
+      if (error) {
+        _this.app.addNotification({
+          message: error
+        })
+      }
+
       console.log('on show')
       _this.app.closeModal('.popup-sources')
       _this.loadingPlaylist = null
@@ -162,7 +174,13 @@ var vm = new Vue({
       _this.autoplay()
     })
 
-    client.on('cover', function (err, response) {
+    client.on('cover', function (error, response) {
+      if (error) {
+        _this.app.addNotification({
+          message: error
+        })
+      }
+
       console.warn('*** Got cover image', response.image)
       if (response.image) {
         Vue.set(_this.current, 'lastFmCover', response.image)

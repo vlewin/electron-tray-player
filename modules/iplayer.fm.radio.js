@@ -1,15 +1,16 @@
 var jsdom = require('jsdom')
 
-function load() {
+function load () {
   return new Promise(function (resolve, reject) {
     var url = 'http://iplayer.fm/radio/russia/'
     var page = page || 1
-    var link = 'url' + '/' + page
 
     jsdom.env({
       url: url,
       scripts: ['http://code.jquery.com/jquery.js'],
       done: function (err, window) {
+        if (err) { throw err }
+
         var list = []
         var $ = window.$
 
@@ -31,7 +32,6 @@ function load() {
         resolve(list)
       }
     })
-
   })
 }
 
