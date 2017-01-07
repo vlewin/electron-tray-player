@@ -23,16 +23,10 @@
           <i class="material-icons color-white close">close</i>
         </a>
 
-        <div class="card-header color-white no-border" v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing, 'loading': loading, 'cover': lastFmCover }" valign="bottom">
-          <div class="chip title color-white">
-            <div class="chip-media">
-              <a href="#" v-on:click="favorite">
-                <i class="material-icons color-white">favorite_border</i>
-              </a>
-            </div>
-            <div class="chip-label">
-              {{ current.title }}
-            </div>
+        <div class="card-header color-white" v-bind:class="{ state: state }" v-bind:style="background" v-bind:data-state="state" valign="bottom">
+          <div class="card-title">
+            <div class="title">{{ current.title }}</div>
+            <small>{{ current.artist }}</small>
           </div>
         </div>
 
