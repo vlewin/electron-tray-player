@@ -25,7 +25,7 @@ function load() {
           })
         })
 
-        console.log('zf.fm', list)
+        // console.log('zf.fm', list)
         resolve(list)
       }
     })

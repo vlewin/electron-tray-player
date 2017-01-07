@@ -323,7 +323,7 @@ var vm = new Vue({
       Store.set('playlist', playlist)
     },
 
-    quite: function () {
+    quit: function () {
       client.request('terminate')
     }
   },

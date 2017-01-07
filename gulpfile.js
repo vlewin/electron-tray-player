@@ -12,8 +12,8 @@ gulp.task('serve', function () {
   electron.start()
 
   // Reload renderer process
-  gulp.watch(['index.js', 'index.html', 'modules/*.js'], electron.restart)
+  gulp.watch(['index.js', 'player.js', 'index.html', 'assets/css/*.css', 'modules/*.js'], electron.restart)
 
   // Reload renderer process
-  gulp.watch(['player.js', 'templates/index.tmpl'], electron.restart)
+  // gulp.watch(['player.js', 'templates/index.tmpl'], electron.restart)
 })

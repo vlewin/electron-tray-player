@@ -19,11 +19,11 @@
       </div>
 
       <div class="card">
-        <div class="card-header color-white no-border" v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing, 'loading': loading, 'cover': lastFmCover }" valign="bottom">
-          <a href="#" class="right-position" v-on:click="quite">
-            <i class="material-icons color-white close">close</i>
-          </a>
+        <a href="#" class="quit" v-on:click="quit">
+          <i class="material-icons color-white close">close</i>
+        </a>
 
+        <div class="card-header color-white no-border" v-bind:style="{ 'background-image': 'url(' + cover + ')'} " v-bind:class="{ 'paused': !playing, 'loading': loading, 'cover': lastFmCover }" valign="bottom">
           <div class="chip title color-white">
             <div class="chip-media">
               <a href="#" v-on:click="favorite">
@@ -91,90 +91,86 @@
       <player :source="current"></player>
 
       <div class="popup popup-sources">
-        <div class="">
-          <div class="content-block-title">
-            Sources
-            <a href="#" class="close-popup">
-              <i class="material-icons right-position">close</i>
-            </a>
-          </div>
+        <div class="content-block-title">
+          Sources
+          <a href="#" class="close-popup">
+            <i class="material-icons right">close</i>
+          </a>
+        </div>
 
-          <div class="list-block media-list">
-            <ul>
-              <li>
-                <div class="item-content">
-                  <div class="item-media">
-                    <i class="material-icons icon-medium color-gray">note_add</i>
+        <div class="list-block media-list">
+          <ul>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="material-icons icon-medium color-gray">note_add</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title-row">
+                    <div class="item-title">Play local audio files</div>
+                    <a href="#" class="link" v-on:click="open">
+                      <i class="material-icons round">add</i>
+                    </a>
                   </div>
-                  <div class="item-inner">
-                    <div class="item-title-row">
-                      <div class="item-title">Play local audio files</div>
-                      <a href="#" class="link" v-on:click="open">
-                        <i class="material-icons">add_circle_outline</i>
-                      </a>
-                    </div>
-                    <div class="item-subtitle">Import playlist from hard drive</div>
+                  <div class="item-subtitle">
+                    <small>Import playlist from hard drive</small>
                   </div>
                 </div>
-              </li>
+              </div>
+            </li>
 
-              <li v-for="(source, index) in sources">
-                <div class="item-content">
-                  <div class="item-media">
-                    <i class="material-icons icon-medium">wifi_tethering</i>
+            <li v-for="(source, index) in sources">
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="material-icons icon-medium">wifi_tethering</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title-row">
+                    <div class="item-title">Import playlist from '{{ source }}'</div>
+                    <a href="#" class="link" v-on:click="load(source, index)">
+                      <i class="material-icons round spin" v-if="loadingPlaylist == index">loop</i>
+                      <i class="material-icons round" v-else>add</i>
+                    </a>
                   </div>
-                  <div class="item-inner">
-                    <div class="item-title-row">
-                      <div class="item-title">Import playlist from '{{ source }}'</div>
-                      <a href="#" class="link" v-on:click="load(source, index)">
-                        <i class="material-icons spin" v-if="loadingPlaylist == index">loop</i>
-                        <i class="material-icons" v-else>add_circle_outline</i>
-                      </a>
-                    </div>
-                    <div class="item-subtitle">Online playlist</div>
+                  <div class="item-subtitle">
+                    <small>Online playlist</small>
                   </div>
                 </div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+          </ul>
 
         </div>
       </div>
 
       <div class="popup popup-playlist">
-        <div class="">
-          <div class="content-block-title">
-            Playlist
-            <a href="#" class="close-popup">
-              <i class="material-icons right-position">close</i>
-            </a>
-          </div>
+        <div class="content-block-title">
+          Playlist
+          <a href="#" class="close-popup">
+            <i class="material-icons right">close</i>
+          </a>
+        </div>
 
-          <div class="list-block">
-            <ul>
-              <li class="item-content" v-for="(stream, index) in playlist">
-                <div class="item-media">
-                  <!-- <a href="#" class="link" v-on:click="favorite">
-                    <i class="material-icons">favorite_border</i>
-                  </a> -->
-                  <img v-bind:src="stream.image" width="44" v-if="stream.image">
-                  <img src="https://image.freepik.com/free-icon/audio-wave_318-104765.jpg" width="44" v-else>
+        <div class="list-block">
+          <ul>
+            <li class="item-content" v-bind:class="{ active: current == playlist[index]}" v-for="(stream, index) in playlist">
+              <div class="item-media">
+                <img v-bind:src="stream.image" width="44" v-if="stream.image">
+                <img src="https://image.freepik.com/free-icon/audio-wave_318-104765.jpg" width="44" v-else>
+              </div>
+              <div class="item-inner">
+                <div class="item-title">{{ stream.title }}</div>
+                <div class="item-after">
+                  <a href="#" class="link" v-on:click="current == playlist[index] ? toggle() : play(index)">
+                    <i class="material-icons round" v-bind:class="{ active: current == playlist[index]}">
+                      {{ current == playlist[index] && playing ? 'pause' : 'play_arrow' }}
+                    </i>
+                  </a>
                 </div>
-                <div class="item-inner">
-                  <div class="item-title">{{ stream.title }}</div>
-                  <div class="item-after">
-                    <a href="#" class="link" v-on:click="current == playlist[index] ? pause() : play(index)">
-                      <i class="material-icons round" v-bind:class="{ active: current == playlist[index]}">{{ current == playlist[index] ? 'pause' : 'play_arrow' }}</i>
-                    </a>
-                    <a href="#" class="link" v-on:click="favorite">
-                      <i class="material-icons round">favorite_border</i>
-                    </a>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <div class="list-block-label">TODO: Add pagination (http://framework7.io/docs/infinite-scroll.html)</div>
-          </div>
+              </div>
+            </li>
+          </ul>
+          <div class="list-block-label">TODO: Add pagination (http://framework7.io/docs/infinite-scroll.html)</div>
         </div>
       </div>
 

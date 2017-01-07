@@ -27,7 +27,7 @@ function load() {
           })
         })
 
-        console.log('iplayer.fm/radio', list)
+        // console.log('iplayer.fm/radio', list)
         resolve(list)
       }
     })
