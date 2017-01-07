@@ -1,0 +1,45 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "jquery": true,
+    "es6": true
+  },
+
+  "extends": "  eslint:recommended",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      # "arrowFunctions": true,
+      # "destructuring": true,
+      # "classes": true,
+      # "defaultParams": true,
+      # "blockBindings": true,
+      # "modules": true,
+      # "objectLiteralComputedProperties": true,
+      # "objectLiteralShorthandMethods": true,
+      # "objectLiteralShorthandProperties": true,
+      # "restParams": true,
+      # "spread": true,
+      # "forOf": true,
+      # "generators": true,
+      # "templateStrings": true,
+      # "superInFunctions": true,
+      # "experimentalObjectRestSpread": true
+    }
+  },
+
+  "rules": {
+    no-debugger: 0,
+    no-console: 0,
+    vars-on-top: 0,
+    func-names: 0,
+    semi: [2, "never"],
+    comma-dangle: [2, "never"],
+    max-len: [2, 160, 2, {"ignoreUrls": true}],
+    no-param-reassign: [2, { "props": false }],
+    consistent-this: [2, "_this"]
+  }
+
+}
