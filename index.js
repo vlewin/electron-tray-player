@@ -1,19 +1,19 @@
-var path = require('path')
-var glob = require('glob')
-var menubar = require('menubar')
-var electron = require('electron')
-var dialog = electron.dialog
-var fs = require('fs')
-var Server = require('electron-rpc/server')
+const path = require('path')
+const glob = require('glob')
+const menubar = require('menubar')
+const electron = require('electron')
+const dialog = electron.dialog
+const fs = require('fs')
+const Server = require('electron-rpc/server')
 
-var LastfmAPI = require('lastfmapi')
-var id3 = require('id3js')
+const LastfmAPI = require('lastfmapi')
+const id3Parser = require('id3-parser')
+const modules = { }
 
-var debug = false
-var modules = { }
+const DEBUG = process.env.DEBUG
 const MODULES_PATH = path.join(__dirname, 'modules')
 
-var lfm = new LastfmAPI({
+const lfm = new LastfmAPI({
   api_key: '74ade13a78ff603957607591303b91a2',
   secret: 'ca53f40ee0cf594d0fc3cc74dc263f6b'
 })
@@ -22,7 +22,7 @@ var opts = {
   dir: __dirname,
   icon: path.join(__dirname, 'images', 'Icon.png'),
   tooltip: 'MP3/Radio tray player',
-  width: debug ? 1000 : 470,
+  width: DEBUG ? 1000 : 470,
   height: 400,
   preloadWindow: true,
   resizable: false
@@ -36,8 +36,8 @@ process.on('uncaughtException', function (err) {
   menu.app.quit()
 })
 
-menu.on('ready', function ready() {
-  app.on('sources', function sources() {
+menu.on('ready', function ready () {
+  app.on('sources', function sources () {
     glob.sync(MODULES_PATH + '/*.js').forEach(function (file) {
       var name = path.parse(file).base.replace('.js', '')
       console.log('*** Found module:', name, 'in file:', file)
@@ -47,7 +47,7 @@ menu.on('ready', function ready() {
     app.send('sources', { sources: Object.getOwnPropertyNames(modules) })
   })
 
-  app.on('cover', function cover(ev) {
+  app.on('cover', function cover (ev) {
     lfm.track.getInfo(ev.body, function (err, result) {
       if (err) {
         console.log('ERROR: Cover for', ev.body, err)
@@ -58,7 +58,7 @@ menu.on('ready', function ready() {
     })
   })
 
-  app.on('open', function open() {
+  app.on('open', function open () {
     var dir = dialog.showOpenDialog({
       properties: ['openDirectory']
     })
@@ -67,44 +67,42 @@ menu.on('ready', function ready() {
 
     var directory = dir[0]
     var playlist = []
-    var iterator = 0
 
-    var files = fs.readdirSync(directory)
+    var files = fs.readdirSync(directory).filter(function (file) {
+      return file.endsWith('.mp3')
+    })
 
-    files.forEach(function (item) {
-      if (item.endsWith('.mp3')) {
-        var track = path.join(directory, item)
+    files.forEach(function (item, index) {
+      var track = path.join(directory, item)
+      id3Parser.parse(fs.readFileSync(track)).then(function (tags) {
+        console.log(tags)
+        const song = {}
+        song.stream = track
 
-        console.log(iterator, 'Get tags for', track)
+        if (tags.title && tags.artist) {
+          song.title = tags.title
+          song.artist = tags.artist
+          song.name = tags.artist + ' - ' + tags.title
+          song.image = (tags.image && tags.image.data) ? `data:image/png;base64,${tags.image.data.toString('base64')}` : null
+        } else {
+          console.warn('No tags')
+          song.title = item
+        }
 
-        id3({ file: track, type: id3.OPEN_LOCAL }, function (err, tags) {
-          console.log('Title', tags.title, 'artist', tags.artist)
+        playlist.push(song)
 
-          if (tags.title && tags.artist) {
-            // FIXME: Cyrillic encoding
-            console.log('Tags found', tags)
-            var name = tags.artist + ' - ' + tags.title
-            playlist.push({ title: name, track: tags.title, artist: tags.artist, stream: track })
-          } else {
-            console.log('No tags')
-            playlist.push({ title: item, stream: track })
-          }
-
-          if (playlist.length === iterator) {
-            app.send('show', { playlist: playlist })
-          }
-        })
-
-        iterator++
-      }
+        if (files.length === index + 1) {
+          app.send('show', { playlist: playlist })
+        }
+      })
     })
   })
 
-  app.on('load', function load(ev) {
+  app.on('load', function load (ev) {
     var key = ev.body
     console.log(modules)
-    let module = modules[key]
-    if(module) {
+    const module = modules[key]
+    if (module) {
       modules[key].load().then(function (playlist) {
         app.send('show', { playlist: playlist })
       })
@@ -113,18 +111,18 @@ menu.on('ready', function ready() {
     }
   })
 
-  app.on('terminate', function terminate() {
+  app.on('terminate', function terminate () {
     menu.app.quit()
   })
 })
 
 menu.once('show', function () {
-  if (debug) {
+  if (DEBUG) {
     menu.window.openDevTools({ detach: false })
   }
 })
 
-menu.on('show', function show() {
+menu.on('show', function show () {
   app.configure(menu.window.webContents)
 })
 
