@@ -1,8 +1,7 @@
-let Vue = require('vue/dist/vue.js')
-let Store = require('store')
-let Client = require('electron-rpc/client')
-let client = new Client()
-
+const Vue = require('vue/dist/vue.js')
+const Store = require('store')
+const Client = require('electron-rpc/client')
+const client = new Client()
 
 Vue.filter('time', function (value) {
   if (isNaN(value)) {
@@ -65,7 +64,7 @@ var vm = new Vue({
     app: new Framework7(),
     current: { title: 'Paused', stream: '' },
     defaultCover: './images/cover.jpg',
-    lastFmCover: true,
+    lastFmCover: null,
     playing: false,
     debug: true,
     index: 0,
@@ -88,34 +87,48 @@ var vm = new Vue({
   },
 
   computed: {
-    cover() {
+    state () {
+      if (this.loading) {
+        return 'LOADING...'
+      }
+
+      if (!this.playing) {
+        return 'PAUSED'
+      }
+    },
+
+    background () {
+      return { 'background-image': `url(${this.cover})` }
+    },
+
+    cover () {
       return this.current.image ? this.current.image : this.defaultCover
     },
 
-    firstItemInPlaylist() {
+    firstItemInPlaylist () {
       return this.index === 0
     },
 
-    lastItemInPlaylist() {
+    lastItemInPlaylist () {
       return (this.index === this.playlist.length - 1)
     }
   },
 
   mounted: function () {
-    let _this = this
-    if(!this.debug) {
-      console.log = function() {}
+    const _this = this
+    if (!this.debug) {
+      console.log = function () {}
     }
 
     // FIXME: Move to function
     client.request('sources')
     this.setVolume(this.volume)
 
-    if(this.playlist.length) {
+    if (this.playlist.length) {
       this.autoplay()
     } else {
       console.log('No playlist items, check last played playlist and load')
-      setTimeout(function() {
+      setTimeout(function () {
         _this.loadLastPlaylist()
       }, 500)
     }
@@ -151,10 +164,8 @@ var vm = new Vue({
 
     client.on('cover', function (err, response) {
       console.warn('*** Got cover image', response.image)
-      _this.lastFmCover = !!response.image
-
-      if (_this.lastFmCover) {
-        Vue.set(_this.current, 'image', response.image)
+      if (response.image) {
+        Vue.set(_this.current, 'lastFmCover', response.image)
       } else {
         console.warn('No cover image found!')
         // Vue.set(_this.current, 'skipImage', true)
@@ -196,7 +207,7 @@ var vm = new Vue({
 
   methods: {
     autoplay: function () {
-      if(this.playlist.length) {
+      if (this.playlist.length) {
         this.index = 0
         this.current = this.playlist[this.index]
         this.playing = true
@@ -226,17 +237,17 @@ var vm = new Vue({
       }, 200)
     },
 
-    mute() {
+    mute () {
       this.muted = true
       this.volume = 0
     },
 
-    umute() {
+    umute () {
       this.muted = false
       this.volume = 0.5
     },
 
-    setVolume(value) {
+    setVolume (value) {
       this.muted = !value
       $('#player')[0].volume = value
     },
@@ -268,7 +279,7 @@ var vm = new Vue({
       this.nextIndex = this.index + 1
       this.lastTrack = (this.nextIndex >= this.playlist.length)
 
-      if(this.lastTrack) {
+      if (this.lastTrack) {
         console.warn('Last track in playlist')
       } else {
         this.index = this.nextIndex
@@ -306,19 +317,19 @@ var vm = new Vue({
       this.rememberLastPlaylist(playlist)
     },
 
-    loadLastPlaylist() {
+    loadLastPlaylist () {
       console.log('find last playlist')
       this.app.popup('.popup-sources')
 
-      let playlist = Store.get('playlist')
+      const playlist = Store.get('playlist')
 
-      if(playlist) {
+      if (playlist) {
         console.log('load last playlist', playlist)
         this.load(playlist, this.sources.indexOf(playlist))
       }
     },
 
-    rememberLastPlaylist(playlist) {
+    rememberLastPlaylist (playlist) {
       console.log('remember playlist', playlist)
       Store.set('playlist', playlist)
     },
