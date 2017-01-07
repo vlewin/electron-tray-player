@@ -22,7 +22,7 @@ var opts = {
   dir: __dirname,
   icon: path.join(__dirname, 'images', 'Icon.png'),
   tooltip: 'MP3/Radio tray player',
-  width: DEBUG ? 1000 : 470,
+  width: DEBUG ? 1000 : 400,
   height: 400,
   preloadWindow: true,
   resizable: false
@@ -48,14 +48,34 @@ menu.on('ready', function ready () {
   })
 
   app.on('cover', function cover (ev) {
-    lfm.track.getInfo(ev.body, function (err, result) {
-      if (err) {
-        console.log('ERROR: Cover for', ev.body, err)
-      }
+    let params = ev.body
+    lfm.track.getInfo(params, function (err, result) {
+      if (err) { console.log('ERROR:', err.message) }
+      let image = (result && result.album) ? result.album.image[3]['#text'] : null
 
-      var image = (result && result.album) ? result.album.image[3]['#text'] : null
-      app.send('cover', { image: image })
+      if (image) {
+        app.send('cover', { image: image })
+      } else {
+        params = { artist: params.artist }
+        console.log('Get artist info', params)
+
+        lfm.artist.getInfo(params, function (err, result) {
+          console.log(result)
+          if (err) { console.log('ERROR:', err.message) }
+          image = (result && result.image) ? result.image[3]['#text'] : null
+          app.send('cover', { image: image })
+        })
+      }
     })
+
+    // lfm.track.getInfo(ev.body, function (err, result) {
+    //   if (err) {
+    //     console.log('ERROR: Cover for', ev.body, err)
+    //   }
+    //
+    //   var image = (result && result.album) ? result.album.image[3]['#text'] : null
+    //   app.send('cover', { image: image })
+    // })
   })
 
   app.on('open', function open () {

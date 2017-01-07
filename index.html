@@ -150,7 +150,7 @@
             <li class="item-content" v-bind:class="{ active: current == playlist[index]}" v-for="(stream, index) in playlist">
               <div class="item-media">
                 <img v-bind:src="stream.image" width="44" v-if="stream.image">
-                <img src="https://image.freepik.com/free-icon/audio-wave_318-104765.jpg" width="44" v-else>
+                <img src="./assets/images/cover-small.png" width="44" v-else>
               </div>
               <div class="item-inner">
                 <div class="item-title">{{ stream.title }}</div>

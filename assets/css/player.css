@@ -37,14 +37,15 @@ body {
   right: 15px;
   font-weight: bold;
   position: absolute;
-  background-color: #9F9896;
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 100%;
   z-index: 10000;
   cursor: pointer;
+  border-radius: 100%;
 }
 
 .card .card-header {
-  height: 50vw;
+  height: 60vw;
   background-size: cover;
   background-position: center;
   justify-content: flex-start;

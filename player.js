@@ -102,7 +102,7 @@ new Vue({
     },
 
     cover () {
-      return this.current.image ? this.current.image : this.defaultCover
+      return this.current.lastFmCover || this.current.image || this.defaultCover
     },
 
     firstItemInPlaylist () {
@@ -141,9 +141,7 @@ new Vue({
 
     client.on('sources', function (error, response) {
       if (error) {
-        _this.app.addNotification({
-          message: error
-        })
+        _this.app.addNotification({ message: error })
       }
 
       console.log('on source')
@@ -151,10 +149,9 @@ new Vue({
     })
 
     client.on('show', function (error, response) {
+      console.log(response)
       if (error) {
-        _this.app.addNotification({
-          message: error
-        })
+        _this.app.addNotification({ message: error })
       }
 
       console.log('on show')
@@ -176,9 +173,7 @@ new Vue({
 
     client.on('cover', function (error, response) {
       if (error) {
-        _this.app.addNotification({
-          message: error
-        })
+        _this.app.addNotification({ message: error })
       }
 
       console.warn('*** Got cover image', response.image)
@@ -194,12 +189,15 @@ new Vue({
       console.log('*** Playback started', _this.current.title)
       _this.loading = false
       _this.playing = true
-      if (_this.current.track && _this.current.artist) {
-        console.log('Request image from LastfmAPI for', _this.current.track, _this.current.artist)
+
+      if (!_this.current.lastFmCover && _this.current.title && _this.current.artist) {
+        console.log('Request image from LastfmAPI for', _this.current.title, _this.current.artist)
         setTimeout(function () {
-          var params = { track: _this.current.track, artist: _this.current.artist }
+          var params = { track: _this.current.title, artist: _this.current.artist }
+          console.info(params)
+
           client.request('cover', params)
-        }, 2000)
+        }, 1000)
       }
     })
 
