@@ -64,6 +64,7 @@ new Vue({
     app: new Framework7(),
     current: { title: 'Paused', stream: '' },
     defaultCover: './images/cover.jpg',
+    lastFm: true,
     lastFmCover: null,
     playing: false,
     debug: true,
@@ -74,6 +75,7 @@ new Vue({
     muted: false,
     volume: 0.5,
     loading: false,
+    lastPlaylist: true,
     loadingPlaylist: null,
     sources: [],
     playlist: [
@@ -129,7 +131,10 @@ new Vue({
     } else {
       console.log('No playlist items, check last played playlist and load')
       setTimeout(function () {
-        // _this.loadLastPlaylist()
+        // FIXME: lastPlaylist from localStorage
+        if (lastPlaylist) {
+          _this.loadLastPlaylist()
+        }
       }, 500)
     }
 
@@ -190,7 +195,8 @@ new Vue({
       _this.loading = false
       _this.playing = true
 
-      if (!_this.current.lastFmCover && _this.current.title && _this.current.artist) {
+      // FIXME: lastFm from localStorage
+      if (_this.lastFm && !_this.current.lastFmCover && _this.current.title && _this.current.artist) {
         console.log('Request image from LastfmAPI for', _this.current.title, _this.current.artist)
         setTimeout(function () {
           var params = { track: _this.current.title, artist: _this.current.artist }

@@ -229,6 +229,10 @@ i.icon-large.playing::after {
   float:right;
 }
 
+.popup-settings .item-title.label {
+  width: 50%;
+}
+
 @keyframes rotate-marker {
   100% {
     transform: rotateZ(360deg);

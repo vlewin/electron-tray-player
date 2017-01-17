@@ -82,6 +82,10 @@
             <a href="#" data-popup=".popup-airplay" class="open-popup">
               <i class="material-icons icon-small rounded">airplay</i>
             </a>
+
+            <a href="#" data-popup=".popup-settings" class="open-popup">
+              <i class="material-icons icon-small rounded">settings</i>
+            </a>
           </p>
         </div>
       </div>
@@ -194,6 +198,47 @@
                       play_arrow
                     </i>
                   </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="popup popup-settings">
+        <div class="content-block-title">
+          Settings
+          <a href="#" class="close-popup">
+            <i class="material-icons right">close</i>
+          </a>
+        </div>
+
+        <div class="list-block">
+          <ul>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                <div class="item-title label">Load last playlist on start</div>
+                <div class="item-input">
+                  <label class="label-switch right">
+                    <input type="checkbox" name="switch" value="yes" v-model="lastPlaylist">
+                    <div class="checkbox"></div>
+                  </label>
+                </div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                <div class="item-title label">Last.fm cover</div>
+                <div class="item-input">
+                  <label class="label-switch right">
+                    <input type="checkbox" name="switch" value="yes" v-model="lastFm">
+                    <div class="checkbox"></div>
+                  </label>
+                </div>
                 </div>
               </div>
             </li>
