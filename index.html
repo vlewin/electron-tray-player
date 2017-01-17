@@ -72,11 +72,15 @@
 
           <p class="actions">
             <a href="#" data-popup=".popup-sources" class="open-popup">
-              <i class="material-icons icon-medium">playlist_add</i>
+              <i class="material-icons icon-small">playlist_add</i>
             </a>
 
             <a href="#" data-popup=".popup-playlist" class="open-popup" v-bind:class="{ disabled: !playlist.length }">
-              <i class="material-icons icon-medium last">playlist_play</i>
+              <i class="material-icons icon-small">playlist_play</i>
+            </a>
+
+            <a href="#" data-popup=".popup-airplay" class="open-popup">
+              <i class="material-icons icon-small rounded">airplay</i>
             </a>
           </p>
         </div>
@@ -165,6 +169,35 @@
             </li>
           </ul>
           <div class="list-block-label">TODO: Add pagination (http://framework7.io/docs/infinite-scroll.html)</div>
+        </div>
+      </div>
+
+      <div class="popup popup-airplay">
+        <div class="content-block-title">
+          Play on
+          <a href="#" class="close-popup">
+            <i class="material-icons right">close</i>
+          </a>
+        </div>
+
+        <div class="list-block">
+          <ul>
+            <li class="item-content">
+              <div class="item-media">
+                <i class="material-icons icon-medium">cast</i>
+              </div>
+              <div class="item-inner">
+                <div class="item-title">Device 1</div>
+                <div class="item-after">
+                  <a href="#" class="link">
+                    <i class="material-icons round">
+                      play_arrow
+                    </i>
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
 

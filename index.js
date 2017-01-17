@@ -12,6 +12,8 @@ const modules = { }
 
 const DEBUG = process.env.DEBUG
 const MODULES_PATH = path.join(__dirname, 'modules')
+const TRAY_ICON = path.join(__dirname, 'images', 'tray.png')
+const TRAY_ICON_HIGHLIGHTED = path.join(__dirname, 'images', 'tray_inverted.png')
 
 const lfm = new LastfmAPI({
   api_key: '74ade13a78ff603957607591303b91a2',
@@ -20,12 +22,16 @@ const lfm = new LastfmAPI({
 
 var opts = {
   dir: __dirname,
-  icon: path.join(__dirname, 'images', 'Icon.png'),
+  icon: TRAY_ICON,
   tooltip: 'MP3/Radio tray player',
-  width: DEBUG ? 1000 : 400,
-  height: 400,
+  width: DEBUG ? 1000 : 440,
+  height: 420,
   preloadWindow: true,
   resizable: false
+}
+
+if (process.platform === 'darwin') {
+  opts.y = 26
 }
 
 var menu = menubar(opts)
@@ -67,15 +73,6 @@ menu.on('ready', function ready () {
         })
       }
     })
-
-    // lfm.track.getInfo(ev.body, function (err, result) {
-    //   if (err) {
-    //     console.log('ERROR: Cover for', ev.body, err)
-    //   }
-    //
-    //   var image = (result && result.album) ? result.album.image[3]['#text'] : null
-    //   app.send('cover', { image: image })
-    // })
   })
 
   app.on('open', function open () {
@@ -143,7 +140,14 @@ menu.once('show', function () {
 })
 
 menu.on('show', function show () {
+  console.log('show')
+  menu.tray.setImage(TRAY_ICON_HIGHLIGHTED)
   app.configure(menu.window.webContents)
+})
+
+menu.on('hide', () => {
+  console.log('window hide')
+  menu.tray.setImage(TRAY_ICON)
 })
 
 menu.on('after-create-window', function () {

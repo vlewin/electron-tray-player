@@ -129,7 +129,7 @@ new Vue({
     } else {
       console.log('No playlist items, check last played playlist and load')
       setTimeout(function () {
-        _this.loadLastPlaylist()
+        // _this.loadLastPlaylist()
       }, 500)
     }
 

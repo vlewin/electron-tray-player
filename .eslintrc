@@ -7,7 +7,7 @@
   },
 
   "globals": {
-      "Framework7": true
+    "Framework7": true
   },
 
   "extends": "vue"
