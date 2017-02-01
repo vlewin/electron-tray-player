@@ -22,6 +22,11 @@
 - [ ] Win/Mac install with “auto update” support =>  https://github.com/electron-userland/electron-builder
 ### Screenshots
 
-![Alt text](https://github.com/vlewin/electron-tray-player/blob/master/images/Screenshot.png?raw=true "Optional Title")
+![Alt text](https://github.com/vlewin/electron-tray-player/raw/master/images/Screenshots/Screenshot1.png?raw=true "Optional Title")
 
-![Alt text](https://github.com/vlewin/electron-tray-player/blob/master/images/Screenshot2.png?raw=true "Optional Title")
+![Alt text](https://github.com/vlewin/electron-tray-player/raw/master/images/Screenshots/Screenshot2.png?raw=true "Optional Title")
+
+![Alt text](https://github.com/vlewin/electron-tray-player/raw/master/images/Screenshots/Screenshot3.png?raw=true "Optional Title")
+
+![Alt text](https://github.com/vlewin/electron-tray-player/raw/master/images/Screenshots/Screenshot4.png?raw=true "Optional Title")
+
