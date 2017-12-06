@@ -77,6 +77,7 @@ new Vue({
     loading: false,
     lastPlaylist: true,
     loadingPlaylist: null,
+    receiver: null,
     devices: [],
     sources: [],
     playlist: [
@@ -124,9 +125,8 @@ new Vue({
     }
 
     // FIXME: Move to function
-    client.request('chromecast')
     client.request('sources')
-
+    this.getChromecastDevices()
     this.setVolume(this.volume)
 
     if (this.playlist.length) {
@@ -152,7 +152,6 @@ new Vue({
         _this.app.addNotification({ message: error })
       }
 
-      console.log('on source')
       _this.devices.push(device)
     })
 
@@ -204,8 +203,6 @@ new Vue({
 
     $('#player').on('play', function () {
       console.log('*** Playback started', _this.current.title)
-
-      client.request('chromecast-play', { device: _this.devices[1], stream: _this.current })
 
       _this.loading = false
       _this.playing = true
@@ -272,6 +269,18 @@ new Vue({
         $player.trigger('play')
         _this.playing = true
       }, 200)
+    },
+
+    streamToChromecast (device) {
+      console.log('streamToChromecast', device)
+      if (this.playing && Object.keys(device).length) {
+        // this.app.addNotification({ message: 'Playing on ${this.receiver.name}' })
+        client.request('chromecast-play', { device: device, stream: this.current })
+      }
+    },
+
+    getChromecastDevices () {
+      client.request('chromecast')
     },
 
     mute () {
