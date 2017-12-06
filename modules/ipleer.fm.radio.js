@@ -1,20 +1,16 @@
-var jsdom = require('jsdom')
+const jsdom = require('jsdom')
+const SITE_URL = 'http://ipleer.fm'
 
 function load () {
   return new Promise(function (resolve, reject) {
-    var url = 'http://iplayer.fm/radio/russia/'
-    var page = page || 1
-
     jsdom.env({
-      url: url,
+      url: `${SITE_URL}/radio/russia/`,
       scripts: ['http://code.jquery.com/jquery.js'],
       done: function (err, window) {
         if (err) { throw err }
 
         var list = []
         var $ = window.$
-
-        console.log('my-hit.me', 'done')
 
         $('.radio-station').each(function () {
           var $item = $(this)
@@ -24,11 +20,10 @@ function load () {
           list.push({
             title: $title.html(),
             stream: $item.data('mp3'),
-            image: 'http://iplayer.fm' + $img.attr('src')
+            image: `${SITE_URL}${$img.attr('src')}`
           })
         })
 
-        // console.log('iplayer.fm/radio', list)
         resolve(list)
       }
     })
