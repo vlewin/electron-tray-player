@@ -4,10 +4,12 @@ const menubar = require('menubar')
 const electron = require('electron')
 const dialog = electron.dialog
 const fs = require('fs')
-const Server = require('electron-rpc/server')
 
+const Server = require('electron-rpc/server')
 const LastfmAPI = require('lastfmapi')
 const id3Parser = require('id3-parser')
+const Chromecast = require('./chromecast.js')
+const cast = new Chromecast()
 const modules = { }
 
 const DEBUG = process.env.DEBUG
@@ -73,6 +75,29 @@ menu.on('ready', function ready () {
         })
       }
     })
+  })
+
+  app.on('chromecast', () => {
+    cast.startScan()
+    cast.browser.on('serviceUp', (service) => {
+      // console.log(service)
+      console.log('found device "%s" at %s:%d', service.txtRecord.fn, service.addresses[0], service.port)
+      if (service.txtRecord.md === 'MIBOX3') {
+        // ondeviceup(service.addresses[0])
+        // browser.stop();
+      }
+
+      app.send('device', { name: service.txtRecord.fn, address: service.addresses[0] })
+
+      // setTimeout(function () {
+      //   this.browser.stop()
+      // }.bind(this), 2000)
+    })
+  })
+
+  app.on('chromecast-play', (payload) => {
+    console.log('******', payload.body)
+    cast.play(payload.body.device.address, payload.body.stream)
   })
 
   app.on('open', function open () {

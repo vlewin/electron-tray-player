@@ -77,6 +77,7 @@ new Vue({
     loading: false,
     lastPlaylist: true,
     loadingPlaylist: null,
+    devices: [],
     sources: [],
     playlist: [
 
@@ -123,7 +124,9 @@ new Vue({
     }
 
     // FIXME: Move to function
+    client.request('chromecast')
     client.request('sources')
+
     this.setVolume(this.volume)
 
     if (this.playlist.length) {
@@ -132,7 +135,7 @@ new Vue({
       console.log('No playlist items, check last played playlist and load')
       setTimeout(function () {
         // FIXME: lastPlaylist from localStorage
-        if (lastPlaylist) {
+        if (this.lastPlaylist) {
           _this.loadLastPlaylist()
         }
       }, 500)
@@ -142,6 +145,15 @@ new Vue({
       if (e.keyCode === 32) {
         _this.toggle()
       }
+    })
+
+    client.on('device', function (error, device) {
+      if (error) {
+        _this.app.addNotification({ message: error })
+      }
+
+      console.log('on source')
+      _this.devices.push(device)
     })
 
     client.on('sources', function (error, response) {
@@ -192,6 +204,9 @@ new Vue({
 
     $('#player').on('play', function () {
       console.log('*** Playback started', _this.current.title)
+
+      client.request('chromecast-play', { device: _this.devices[1], stream: _this.current })
+
       _this.loading = false
       _this.playing = true
 

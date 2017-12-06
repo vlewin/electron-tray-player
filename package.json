@@ -8,6 +8,7 @@
     "test": "standard",
     "start": "gulp serve",
     "start:debug": "DEBUG=true npm start",
+    "rebuild": "./node_modules/.bin/electron-rebuild",
     "build": "electron-packager . TrayPlayer --platform=darwin --arch=x64 --app-version=1.0.0 --overwrite --icon='./images/App.icns' --out=build --ignore='node_modules/electron-(packager|prebuild)'",
     "build:all": "electron-packager . TrayPlayer --platform=all --arch=x64 --app-version=1.0.0 --overwrite --icon='./images/App.icns' --out=build --ignore='node_modules/electron-(packager|prebuild)'"
   },
@@ -23,25 +24,30 @@
   "author": "vlewin",
   "license": "MIT",
   "dependencies": {
-    "electron-rpc": "latest",
-    "glob": "^7.0.3",
+    "chromecast-js": "^0.1.7",
+    "electron-rpc": "^2.0.1",
+    "glob": "^7.1.2",
     "id3-parser": "^1.1.1",
-    "jsdom": "latest",
+    "jsdom": "^8.5.0",
     "lastfmapi": "^0.1.1",
-    "menubar": "latest",
-    "store": "latest",
-    "vue": "latest"
+    "mdns": "^2.3.3",
+    "menubar": "^5.2.3",
+    "store": "^2.0.12",
+    "vue": "^2.3.4"
   },
   "devDependencies": {
-    "electron": "^1.4.10",
-    "electron-connect": "latest",
+    "electron": "^1.6.11",
+    "electron-connect": "^0.6.1",
     "electron-packager": "latest",
+    "electron-rebuild": "^1.5.11",
     "eslint": "^3.13.0",
     "eslint-config-vue": "^2.0.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-vue": "^1.0.0",
-    "gulp": "latest",
-    "standard": "latest"
+    "gulp": "^3.9.1",
+    "standard": "latest",
+    "underscore": "^1.8.3",
+    "webidl-conversions": "^4.0.1"
   },
   "standard": {
     "ignore": [

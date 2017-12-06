@@ -79,9 +79,9 @@
               <i class="material-icons icon-small">playlist_play</i>
             </a>
 
-            <!-- <a href="#" data-popup=".popup-airplay" class="open-popup">
+            <a href="#" data-popup=".popup-airplay" class="open-popup">
               <i class="material-icons icon-small rounded">airplay</i>
-            </a> -->
+            </a>
 
             <a href="#" data-popup=".popup-settings" class="open-popup">
               <i class="material-icons icon-small rounded">settings</i>
@@ -184,14 +184,15 @@
           </a>
         </div>
 
-        <!-- <div class="list-block">
+        <div class="list-block">
+          {{ devices }}
           <ul>
-            <li class="item-content">
+            <li class="item-content" v-for="device in devices">
               <div class="item-media">
                 <i class="material-icons icon-medium">cast</i>
               </div>
               <div class="item-inner">
-                <div class="item-title">Device 1</div>
+                <div class="item-title">{{ device.name }}</div>
                 <div class="item-after">
                   <a href="#" class="link">
                     <i class="material-icons round">
@@ -199,10 +200,9 @@
                     </i>
                   </a>
                 </div>
-              </div>
             </li>
           </ul>
-        </div> -->
+        </div>
       </div>
 
       <div class="popup popup-settings">
