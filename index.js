@@ -80,7 +80,6 @@ menu.on('ready', function ready () {
   app.on('chromecast', () => {
     cast.startScan()
     cast.browser.on('serviceUp', (service) => {
-      // console.log(service)
       console.log('found device "%s" at %s:%d', service.txtRecord.fn, service.addresses[0], service.port)
       if (service.txtRecord.md === 'MIBOX3') {
         // ondeviceup(service.addresses[0])
@@ -89,9 +88,9 @@ menu.on('ready', function ready () {
 
       app.send('device', { name: service.txtRecord.fn, address: service.addresses[0] })
 
-      // setTimeout(function () {
-      //   this.browser.stop()
-      // }.bind(this), 2000)
+      setTimeout(function () {
+        cast.browser.stop()
+      }, 10000)
     })
   })
 
