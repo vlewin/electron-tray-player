@@ -1,72 +1,4 @@
-// const Client = require('castv2-client').Client
-// const DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver
 var mdns = require('mdns')
-
-// browser.on('serviceUp', function (service) {
-//   console.log(service)
-//   console.log('found device "%s" at %s:%d', service.txtRecord.fn, service.addresses[0], service.port)
-//   if (service.txtRecord.md === 'MIBOX3') {
-//     // ondeviceup(service.addresses[0])
-//     // browser.stop();
-//   }
-//
-//   setTimeout(function () {
-//     browser.stop()
-//   }, 10000)
-// })
-//
-// browser.start()
-
-class ChromecastPlayer {
-  constructor (host) {
-    this.host = host
-  }
-
-  play (url) {
-    const Client = require('castv2-client').Client
-    const DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver
-
-    var client = new Client()
-
-    client.connect(this.host, function () {
-      console.log('connected, launching app ...')
-
-      client.launch(DefaultMediaReceiver, function (err, player) {
-        console.log(err)
-        var media = {
-          contentId: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4',
-          contentType: 'video/mp4',
-          streamType: 'BUFFERED', // or LIVE
-
-          metadata: {
-            type: 0,
-            metadataType: 0,
-            title: 'Big Buck Bunny',
-            images: [
-              { url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg' }
-            ]
-          }
-        }
-
-        player.on('status', function (status) {
-          console.log('status broadcast playerState=%s', status.playerState)
-        })
-
-        console.log('app "%s" launched, loading media %s ...', player.session.displayName, media.contentId)
-
-        player.load(media, { autoplay: true }, function (err, status) {
-          console.log(err)
-          console.log('media loaded playerState=%s', status.playerState)
-        })
-      })
-    })
-
-    client.on('error', function (err) {
-      console.log('Error: %s', err.message)
-      client.close()
-    })
-  }
-}
 
 class Chromecast {
   constructor () {
@@ -169,5 +101,4 @@ class Chromecast {
   }
 }
 
-// Chromecast.init()
-module.exports = Chromecast
+module.exports = new Chromecast()
