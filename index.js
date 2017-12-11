@@ -5,22 +5,16 @@ const electron = require('electron')
 const dialog = electron.dialog
 const fs = require('fs')
 
-const Server = require('electron-rpc/server')
-const LastfmAPI = require('lastfmapi')
 const id3Parser = require('id3-parser')
-const Chromecast = require('./chromecast.js')
-const cast = new Chromecast()
+const Server = require('electron-rpc/server')
+const LastFM = require('./plugins/lastfm')
+const Chromecast = require('./plugins/chromecast')
 const modules = { }
 
 const DEBUG = process.env.DEBUG
 const MODULES_PATH = path.join(__dirname, 'modules')
 const TRAY_ICON = path.join(__dirname, 'images', 'tray.png')
 const TRAY_ICON_HIGHLIGHTED = path.join(__dirname, 'images', 'tray_inverted.png')
-
-const lfm = new LastfmAPI({
-  api_key: '74ade13a78ff603957607591303b91a2',
-  secret: 'ca53f40ee0cf594d0fc3cc74dc263f6b'
-})
 
 var opts = {
   dir: __dirname,
@@ -56,49 +50,32 @@ menu.on('ready', function ready () {
   })
 
   app.on('cover', function cover (ev) {
-    let params = ev.body
-    lfm.track.getInfo(params, function (err, result) {
-      if (err) { console.log('ERROR:', err.message) }
-      let image = (result && result.album) ? result.album.image[3]['#text'] : null
-
-      if (image) {
-        app.send('cover', { image: image })
-      } else {
-        params = { artist: params.artist }
-        console.log('Get artist info', params)
-
-        lfm.artist.getInfo(params, function (err, result) {
-          console.log(result)
-          if (err) { console.log('ERROR:', err.message) }
-          image = (result && result.image) ? result.image[3]['#text'] : null
-          app.send('cover', { image: image })
-        })
-      }
+    LastFM.getCover(ev.body).then((cover) => {
+      console.log('*** COCVER', cover)
+      app.send('cover', { image: cover })
+    }).catch((err) => {
+      console.log(err)
     })
   })
 
   app.on('chromecast', () => {
-    cast.startScan()
-    cast.browser.on('serviceUp', (service) => {
+    Chromecast.startScan()
+    Chromecast.browser.on('serviceUp', (service) => {
       console.log('found device "%s" at %s:%d', service.txtRecord.fn, service.addresses[0], service.port)
-      if (service.txtRecord.md === 'MIBOX3') {
-        // ondeviceup(service.addresses[0])
-        // browser.stop();
-      }
-
       app.send('device', { name: service.txtRecord.fn, address: service.addresses[0] })
 
       setTimeout(function () {
-        cast.browser.stop()
+        Chromecast.browser.stop()
       }, 10000)
     })
   })
 
   app.on('chromecast-play', (payload) => {
-    console.log('******', payload.body)
-    cast.play(payload.body.device.address, payload.body.stream)
+    console.log('NOTE: Chromcast play', payload.body)
+    Chromecast.play(payload.body.device.address, payload.body.stream)
   })
 
+  // FIXME: Move to plugin
   app.on('open', function open () {
     var dir = dialog.showOpenDialog({
       properties: ['openDirectory']
