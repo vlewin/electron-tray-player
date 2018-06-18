@@ -36,9 +36,9 @@
     "vue": "^2.5.9"
   },
   "devDependencies": {
-    "electron": "^1.8.1",
-    "electron-connect": "^0.6.2",
-    "electron-packager": "^10.1.0",
+    "electron": "^2.0.2",
+    "electron-connect": "^0.6.3",
+    "electron-packager": "^12.1.0",
     "electron-rebuild": "^1.6.0",
     "eslint": "^3.13.0",
     "eslint-config-vue": "^2.0.1",
