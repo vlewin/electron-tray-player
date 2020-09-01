@@ -8,6 +8,9 @@
 ### Packaging
 `npm run build`
 
+### Known issues
+* Solution for [bug] gyp ERR! configure error ([#3][i3]): run `npm rebuild` or `yarn rebuild`
+
 ### TODO:
 - [x] Init version
 - [x] Online streams playback
