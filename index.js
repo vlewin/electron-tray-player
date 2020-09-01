@@ -1,6 +1,6 @@
 const path = require('path')
 const glob = require('glob')
-const menubar = require('menubar')
+const menubar = require('./lib/menubar')
 const electron = require('electron')
 const dialog = electron.dialog
 const fs = require('fs')
