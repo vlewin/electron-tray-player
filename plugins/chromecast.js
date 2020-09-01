@@ -61,13 +61,13 @@ class Chromecast {
           // contentType: 'video/mp4',
           streamType: 'LIVE', // BUFFERED or LIVE
 
-            // Title and cover displayed while buffering
+          // Title and cover displayed while buffering
           metadata: {
             type: 0,
             metadataType: 0,
             title: stream.title,
             images: [
-                { url: stream.image }
+              { url: stream.image }
             ]
           }
         }
@@ -82,12 +82,12 @@ class Chromecast {
           console.log(err)
           console.log('media loaded playerState=%s', status.playerState)
 
-            // Seek to 2 minutes after 15 seconds playing.
+          // Seek to 2 minutes after 15 seconds playing.
           setTimeout(function () {
             player.seek(2 * 60, (err, status) => {
               console.log(err)
 
-                //
+              //
             })
           }, 15000)
         })

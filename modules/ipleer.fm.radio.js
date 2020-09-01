@@ -12,7 +12,7 @@ function load () {
         var list = []
         var $ = window.$
 
-        $('.radio-station').each(function () {
+        $('.radio-station').each(() => {
           var $item = $(this)
           var $title = $item.find('h4')
           var $img = $item.find('img')

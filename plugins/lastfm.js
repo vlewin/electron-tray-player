@@ -62,7 +62,6 @@ class LastFM {
       })
     })
   }
-
 }
 
 module.exports = new LastFM()
