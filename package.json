@@ -38,13 +38,13 @@
   "devDependencies": {
     "electron": "^1.8.1",
     "electron-connect": "^0.6.2",
-    "electron-packager": "^10.1.0",
+    "electron-packager": "^15.1.0",
     "electron-rebuild": "^1.6.0",
     "eslint": "^3.13.0",
     "eslint-config-vue": "^2.0.1",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-vue": "^1.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.1",
     "standard": "^10.0.3",
     "underscore": "^1.8.3",
     "webidl-conversions": "^4.0.2"
