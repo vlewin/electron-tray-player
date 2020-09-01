@@ -36,7 +36,7 @@
     "vue": "^2.5.9"
   },
   "devDependencies": {
-    "electron": "^1.8.1",
+    "electron": "^7.2.4",
     "electron-connect": "^0.6.2",
     "electron-packager": "^15.1.0",
     "electron-rebuild": "^1.6.0",
