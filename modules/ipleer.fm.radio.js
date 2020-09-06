@@ -12,16 +12,15 @@ function load () {
         var list = []
         var $ = window.$
 
-        $('.radio-station').each(() => {
-          var $item = $(this)
-          var $title = $item.find('h4')
+        $('li.radio-station').each((i, item) => {
+          var $item = $(item)
           var $img = $item.find('img')
-
-          list.push({
-            title: $title.html(),
+          var station = {
+            title: $item.find('h4').text(),
             stream: $item.data('mp3'),
             image: `${SITE_URL}${$img.attr('src')}`
-          })
+          }
+          list.push(station)
         })
 
         resolve(list)
@@ -33,3 +32,5 @@ function load () {
 module.exports = {
   load: load
 }
+
+load()
